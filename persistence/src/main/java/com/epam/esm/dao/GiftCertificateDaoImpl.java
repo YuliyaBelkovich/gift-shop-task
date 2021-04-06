@@ -20,7 +20,8 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
     private static final String ADD_QUERY = "INSERT INTO gift_certificate (name, description, price, duration) VALUES(?, ? ,?, ?)";
     private static final String FIND_BY_TAG_NAME_QUERY = "SELECT gift_certificate.id, gift_certificate.name, gift_certificate.description, gift_certificate.price, gift_certificate.duration, gift_certificate.create_date, gift_certificate.last_update_date FROM gift_certificate INNER JOIN tag_certificate ON gift_certificate.id = tag_certificate.gift_certificate_id LEFT JOIN tag ON tag_certificate.tag_id = tag.id where tag.name = ?";
     private static final String ADD_TAG = "INSERT INTO tag_certificate (gift_certificate_id, tag_id) VALUES (?, ?)";
-
+    private static final String SEARCH_BY_FIELD_QUERY = "SELECT * FROM gift_certificate WHERE %s LIKE ?";
+    private static final String SORT_QUERY = "SELECT * FROM gift_certificate ORDER BY %s %s";
     private TagDao tagDao;
 
     @Autowired
@@ -142,5 +143,11 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
         });
     }
 
+    public List<GiftCertificate> searchByPartOfField(String field, String value) {
+        return getTemplate().query(String.format(SEARCH_BY_FIELD_QUERY, field), getRowMapper(), "%".concat(value.concat("%")));
+    }
 
+    public List<GiftCertificate> sort(String field, String order) {
+        return getTemplate().query(String.format(SORT_QUERY, field, order), getRowMapper());
+    }
 }

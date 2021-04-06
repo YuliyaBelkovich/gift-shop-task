@@ -10,8 +10,12 @@ public interface GiftCertificateDao extends CrudDao<GiftCertificate> {
 
     List<GiftCertificate> findByTag(Tag tag);
 
-    public void add(GiftCertificate certificate, List<Tag> tags);
+    void add(GiftCertificate certificate, List<Tag> tags);
 
-    public void update(GiftCertificate certificate, List<Tag> tags);
+    void update(GiftCertificate certificate, List<Tag> tags);
+
+    List<GiftCertificate> searchByPartOfField(String field, String value);
+
+    List<GiftCertificate> sort(String field, String order);
 
 }

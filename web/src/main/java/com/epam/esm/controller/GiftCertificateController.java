@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.epam.esm.service.GiftCertificateService;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping(value = "/certificates", produces = "application/json")
 public class GiftCertificateController {
@@ -20,9 +22,34 @@ public class GiftCertificateController {
     }
 
     @GetMapping()
-    public ResponseEntity<GiftCertificateResponseContainer> getAll() {
+    public ResponseEntity<GiftCertificateResponseContainer> getAll(@RequestParam(required = false) Map<String, String> allParams) {
+        if (allParams.containsKey("name")) {
+            return ResponseEntity.ok().body(service.searchByField("name", allParams.get("name")));
+        }
+        if (allParams.containsKey("description")) {
+            return ResponseEntity.ok().body(service.searchByField("description", allParams.get("description")));
+        }
+        if(allParams.containsKey("sort_by") && allParams.containsKey("order")){
+            return ResponseEntity.ok().body(service.sort(allParams.get("sort_by"), allParams.get("order")));
+        }
         return ResponseEntity.ok().body(service.findAll());
     }
+//
+//    @GetMapping("/filter")
+//    public ResponseEntity<GiftCertificateResponseContainer> filter(@RequestParam Map<String, String> allParams) {
+//        if (allParams.containsKey("name")) {
+//            return ResponseEntity.ok().body(service.searchByField("name", allParams.get("name")));
+//        }
+//        if (allParams.containsKey("description")) {
+//            return ResponseEntity.ok().body(service.searchByField("description", allParams.get("description")));
+//        }
+//        return null;
+//    }
+
+//    @GetMapping("/sort")
+//    public ResponseEntity<GiftCertificateResponseContainer> sort(@RequestParam(name = "sort_by") String sortBy, @RequestParam(name = "order") String order) {
+//        return ResponseEntity.ok().body(service.sort(sortBy, order));
+//    }
 
     @GetMapping(value = "/{id}")
     @ResponseBody

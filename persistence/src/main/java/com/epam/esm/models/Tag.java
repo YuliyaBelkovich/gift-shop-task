@@ -6,10 +6,10 @@ public class Tag implements Identifiable {
     private int id;
     private String name;
 
-    public Tag() {
+    private Tag() {
     }
 
-    public Tag(int id, String name) {
+    private Tag(int id, String name) {
         this.id = id;
         this.name = name;
     }

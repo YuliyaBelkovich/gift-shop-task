@@ -1,17 +1,15 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.RequestGiftCertificate;
-import com.epam.esm.dto.ResponseGiftCertificate;
-import com.epam.esm.dto.ResponseGiftCertificateContainer;
+import com.epam.esm.dto.GiftCertificateRequest;
+import com.epam.esm.dto.GiftCertificateResponse;
+import com.epam.esm.dto.GiftCertificateResponseContainer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.epam.esm.service.GiftCertificateService;
 
 @RestController
-@RequestMapping("/certificates")
+@RequestMapping(value = "/certificates", produces = "application/json")
 public class GiftCertificateController {
 
     public GiftCertificateService service;
@@ -22,37 +20,31 @@ public class GiftCertificateController {
     }
 
     @GetMapping()
-    public ResponseEntity<ResponseGiftCertificateContainer> getAll(){
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(service.findAll());
+    public ResponseEntity<GiftCertificateResponseContainer> getAll() {
+        return ResponseEntity.ok().body(service.findAll());
     }
 
-//    @GetMapping("/{tag}")
-//    public ResponseEntity<ResponseGiftCertificateContainer> getByTagName(@PathVariable("tag") String tagName){
-//        return null;
-//    }
-
-    @GetMapping(value = "/{id}", produces = "application/json")
+    @GetMapping(value = "/{id}")
     @ResponseBody
-    public ResponseEntity<ResponseGiftCertificate> getById(@PathVariable("id") int id, Model model){
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(service.findById(id));
+    public ResponseEntity<GiftCertificateResponse> getById(@PathVariable("id") int id) {
+        return ResponseEntity.ok().body(service.findById(id));
     }
 
-    @PostMapping()
-    public void createCertificate(RequestGiftCertificate certificate){
-
+    @PostMapping
+    public void createCertificate(@RequestBody GiftCertificateRequest certificate) {
+        service.save(certificate);
     }
 
     @PatchMapping("/{id}")
-    public void edit(RequestGiftCertificate certificate){
-
+    public void edit(@RequestBody GiftCertificateRequest certificate, @PathVariable("id") int id) {
+        service.update(certificate, id);
     }
 
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") int id){
-
+    public void delete(@PathVariable("id") int id) {
+        service.delete(id);
     }
-
 
 
 }

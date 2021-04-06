@@ -1,21 +1,19 @@
 package com.epam.esm.dto;
 
 import com.epam.esm.models.GiftCertificate;
-import com.epam.esm.models.Tag;
 
 import java.util.List;
 
-public class RequestGiftCertificate {
-    public int id;
+public class GiftCertificateRequest {
     private String name;
     private String description;
     private double price;
     private int duration;
     private List<String> tags;
 
+    public GiftCertificateRequest(){}
 
-    public RequestGiftCertificate(int id, String name, String description, double price, int duration, List<String> tags) {
-        this.id = id;
+    public GiftCertificateRequest(String name, String description, double price, int duration, List<String> tags) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -23,9 +21,6 @@ public class RequestGiftCertificate {
         this.tags = tags;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -45,10 +40,6 @@ public class RequestGiftCertificate {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getName() {
@@ -71,8 +62,10 @@ public class RequestGiftCertificate {
         return tags;
     }
 
-    public GiftCertificate toIdentity(){
-        return GiftCertificate.builder().setId(id)
+    public GiftCertificate toIdentity(int id){
+        return GiftCertificate.builder()
+                .setId(id)
+                .setName(name)
                 .setDescription(description)
                 .setDuration(duration)
                 .setPrice(price)

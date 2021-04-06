@@ -12,10 +12,10 @@ public class GiftCertificate implements Identifiable {
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
 
-    public GiftCertificate() {
+    private GiftCertificate() {
     }
 
-    public GiftCertificate(int id, String name, String description, double price, int duration, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
+   private GiftCertificate(int id, String name, String description, double price, int duration, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
         this.id = id;
         this.name = name;
         this.description = description;

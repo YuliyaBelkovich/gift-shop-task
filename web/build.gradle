@@ -21,6 +21,8 @@ dependencies {
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.2'
 
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.2'
+
     implementation 'org.springframework:spring-context:5.3.5'
 
     implementation 'org.springframework:spring-core:5.3.5'

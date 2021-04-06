@@ -2,28 +2,36 @@ package com.epam.esm.dto;
 
 import com.epam.esm.models.GiftCertificate;
 import com.epam.esm.models.Tag;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ResponseGiftCertificate {
+public class GiftCertificateResponse {
     private int id;
     private String name;
     private String description;
     private double price;
     private int duration;
     private List<String> tags;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime createDate;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime lastUpdateDate;
 
-    public ResponseGiftCertificate() {
+    private GiftCertificateResponse() {
     }
 
-    public ResponseGiftCertificate(int id, String name, String description, double price, int duration, List<String> tags) {
+    private GiftCertificateResponse(int id, String name, String description, double price, int duration, List<String> tags, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.duration = duration;
         this.tags = tags;
+        this.createDate = createDate;
+        this.lastUpdateDate = lastUpdateDate;
     }
 
     public int getId() {
@@ -32,6 +40,22 @@ public class ResponseGiftCertificate {
 
     public String getName() {
         return name;
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
+    public LocalDateTime getLastUpdateDate() {
+        return lastUpdateDate;
+    }
+
+    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
     }
 
     public String getDescription() {
@@ -74,29 +98,20 @@ public class ResponseGiftCertificate {
         this.tags = tags;
     }
 
-    public static ResponseGiftCertificate toDto(GiftCertificate certificate, List<Tag> tags) {
+    public static GiftCertificateResponse toDto(GiftCertificate certificate, List<Tag> tags) {
 
-        return new ResponseGiftCertificate.Builder()
+        return new GiftCertificateResponse.Builder()
                 .setId(certificate.getId())
                 .setName(certificate.getName())
                 .setDescription(certificate.getDescription())
                 .setPrice(certificate.getPrice())
                 .setDuration(certificate.getDuration())
+                .setLastUpdateDate(certificate.getLastUpdateDate())
+                .setCreateDate(certificate.getCreateDate())
                 .setTags(tags)
                 .build();
 
     }
-
-    public static GiftCertificate toIdentity(ResponseGiftCertificate certificate) {
-        GiftCertificate giftCertificate = new GiftCertificate();
-        giftCertificate.setId(certificate.getId());
-        giftCertificate.setName(certificate.getName());
-        giftCertificate.setDuration(certificate.getDuration());
-        giftCertificate.setPrice(certificate.getPrice());
-        giftCertificate.setDescription(certificate.getDescription());
-        return giftCertificate;
-    }
-
     public static class Builder {
         private int id;
         private String name;
@@ -104,6 +119,8 @@ public class ResponseGiftCertificate {
         private double price;
         private int duration;
         private List<String> tags;
+        private LocalDateTime createDate;
+        private LocalDateTime lastUpdateDate;
 
         public Builder setId(int id) {
             this.id = id;
@@ -135,8 +152,17 @@ public class ResponseGiftCertificate {
             return this;
         }
 
-        public ResponseGiftCertificate build() {
-            return new ResponseGiftCertificate(id, name, description, price, duration, tags);
+        public Builder setCreateDate(LocalDateTime createDate){
+            this.createDate = createDate;
+            return this;
+        }
+        public Builder setLastUpdateDate(LocalDateTime lastUpdateDate){
+            this.lastUpdateDate = lastUpdateDate;
+            return this;
+        }
+
+        public GiftCertificateResponse build() {
+            return new GiftCertificateResponse(id, name, description, price, duration, tags, createDate,lastUpdateDate);
         }
     }
 }

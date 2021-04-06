@@ -18,6 +18,8 @@ dependencies {
 
     implementation 'org.springframework:spring-beans:5.3.5'
 
+    implementation'com.fasterxml.jackson.core:jackson-annotations:2.12.2'
+
     implementation project(":persistence")
 }
 

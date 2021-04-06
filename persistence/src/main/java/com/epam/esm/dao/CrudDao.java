@@ -16,14 +16,7 @@ public interface CrudDao<T extends Identifiable> {
 
     void add(T identity);
 
-    void add(T identity, List<? extends Identifiable> list);
-
     void update(T identity);
 
-    void update(T identity, List<? extends Identifiable> list);
-
-    void delete(T identity);
-
-
-
+    void delete(int id);
 }

@@ -30,6 +30,10 @@ public abstract class AbstractDao<T extends Identifiable> implements CrudDao<T> 
         return template;
     }
 
+    public void executeUpdate(String sql, Object... args){
+        template.update(sql, args);
+    }
+
     public abstract String getTableName();
 
     public abstract RowMapper<T> getRowMapper();
@@ -53,20 +57,20 @@ public abstract class AbstractDao<T extends Identifiable> implements CrudDao<T> 
     }
 
     @Override
-    public void delete(T identity) {
-        template.update(String.format(DELETE_QUERY, getTableName()), identity.getId());
+    public void delete(int id) {
+        template.update(String.format(DELETE_QUERY, getTableName()), id);
     }
 
 
     public void add(T identity) {
-        if(findByName(identity.getName()).isEmpty()) {
+        if (findByName(identity.getName()).isEmpty()) {
             KeyHolder keyHolder = new GeneratedKeyHolder();
             template.update(getCreatorForAdd(identity), keyHolder);
             identity.setId(keyHolder.getKey().intValue());
         }
     }
 
-    public void update(T identity){
+    public void update(T identity) {
         template.update(getCreatorForUpdate(identity));
     }
 }

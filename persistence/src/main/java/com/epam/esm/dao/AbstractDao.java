@@ -6,11 +6,8 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Field;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public abstract class AbstractDao<T extends Identifiable> implements CrudDao<T> {
@@ -63,11 +60,9 @@ public abstract class AbstractDao<T extends Identifiable> implements CrudDao<T> 
 
 
     public void add(T identity) {
-        if (findByName(identity.getName()).isEmpty()) {
             KeyHolder keyHolder = new GeneratedKeyHolder();
             template.update(getCreatorForAdd(identity), keyHolder);
             identity.setId(keyHolder.getKey().intValue());
-        }
     }
 
     public void update(T identity) {

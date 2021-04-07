@@ -4,6 +4,8 @@ import com.epam.esm.dto.GiftCertificateRequest;
 import com.epam.esm.dto.GiftCertificateResponse;
 import com.epam.esm.dto.GiftCertificateResponseContainer;
 
+import java.util.Map;
+
 public interface GiftCertificateService {
     GiftCertificateResponseContainer findAll();
 
@@ -13,9 +15,9 @@ public interface GiftCertificateService {
 
     void delete(int id);
 
+    GiftCertificateResponseContainer findByTag(String tag);
+
     GiftCertificateResponse findById(int id);
 
-    GiftCertificateResponseContainer searchByField(String field, String value);
-
-    GiftCertificateResponseContainer sort(String field, String order);
+    GiftCertificateResponseContainer findAll(Map<String, String> params);
 }

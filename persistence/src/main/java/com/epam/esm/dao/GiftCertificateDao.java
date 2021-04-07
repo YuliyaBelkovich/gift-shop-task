@@ -1,21 +1,19 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.models.GiftCertificate;
-import com.epam.esm.models.Identifiable;
 import com.epam.esm.models.Tag;
 
 import java.util.List;
+import java.util.Map;
 
 public interface GiftCertificateDao extends CrudDao<GiftCertificate> {
 
-    List<GiftCertificate> findByTag(Tag tag);
+    List<GiftCertificate> findByTag(String tag);
 
     void add(GiftCertificate certificate, List<Tag> tags);
 
     void update(GiftCertificate certificate, List<Tag> tags);
 
-    List<GiftCertificate> searchByPartOfField(String field, String value);
-
-    List<GiftCertificate> sort(String field, String order);
+    List<GiftCertificate> findWithParams(Map<String, String> params);
 
 }

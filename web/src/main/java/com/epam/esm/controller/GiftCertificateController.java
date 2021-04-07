@@ -3,7 +3,10 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.GiftCertificateRequest;
 import com.epam.esm.dto.GiftCertificateResponse;
 import com.epam.esm.dto.GiftCertificateResponseContainer;
+import com.epam.esm.exception.IdentityAlreadyExistsException;
+import com.epam.esm.exception.IdentityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.epam.esm.service.GiftCertificateService;
@@ -21,35 +24,26 @@ public class GiftCertificateController {
         this.service = service;
     }
 
+    @ExceptionHandler(IdentityNotFoundException.class)
+    public ResponseEntity<Error> giftNotFound(IdentityNotFoundException e) {
+        Error error = new Error(e.getId() + 4040, "GiftCertificate id[" + e.getId() + "] not found");
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(IdentityAlreadyExistsException.class)
+    public ResponseEntity<Error> giftAlreadyExists(IdentityAlreadyExistsException e) {
+        Error error = new Error(4090, e.getIdentity() + " already exists");
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
     @GetMapping()
     public ResponseEntity<GiftCertificateResponseContainer> getAll(@RequestParam(required = false) Map<String, String> allParams) {
-        if (allParams.containsKey("name")) {
-            return ResponseEntity.ok().body(service.searchByField("name", allParams.get("name")));
+        if (allParams.isEmpty()) {
+            return ResponseEntity.ok(service.findAll());
+        } else {
+            return ResponseEntity.ok().body(service.findAll(allParams));
         }
-        if (allParams.containsKey("description")) {
-            return ResponseEntity.ok().body(service.searchByField("description", allParams.get("description")));
-        }
-        if(allParams.containsKey("sort_by") && allParams.containsKey("order")){
-            return ResponseEntity.ok().body(service.sort(allParams.get("sort_by"), allParams.get("order")));
-        }
-        return ResponseEntity.ok().body(service.findAll());
     }
-//
-//    @GetMapping("/filter")
-//    public ResponseEntity<GiftCertificateResponseContainer> filter(@RequestParam Map<String, String> allParams) {
-//        if (allParams.containsKey("name")) {
-//            return ResponseEntity.ok().body(service.searchByField("name", allParams.get("name")));
-//        }
-//        if (allParams.containsKey("description")) {
-//            return ResponseEntity.ok().body(service.searchByField("description", allParams.get("description")));
-//        }
-//        return null;
-//    }
-
-//    @GetMapping("/sort")
-//    public ResponseEntity<GiftCertificateResponseContainer> sort(@RequestParam(name = "sort_by") String sortBy, @RequestParam(name = "order") String order) {
-//        return ResponseEntity.ok().body(service.sort(sortBy, order));
-//    }
 
     @GetMapping(value = "/{id}")
     @ResponseBody

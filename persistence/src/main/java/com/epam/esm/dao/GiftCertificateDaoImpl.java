@@ -20,8 +20,7 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
     private static final String ADD_QUERY = "INSERT INTO gift_certificate (name, description, price, duration) VALUES(?, ? ,?, ?)";
     private static final String FIND_BY_TAG_NAME_QUERY = "SELECT gift_certificate.id, gift_certificate.name, gift_certificate.description, gift_certificate.price, gift_certificate.duration, gift_certificate.create_date, gift_certificate.last_update_date FROM gift_certificate INNER JOIN tag_certificate ON gift_certificate.id = tag_certificate.gift_certificate_id LEFT JOIN tag ON tag_certificate.tag_id = tag.id where tag.name = ?";
     private static final String ADD_TAG = "INSERT INTO tag_certificate (gift_certificate_id, tag_id) VALUES (?, ?)";
-    private static final String SEARCH_BY_FIELD_QUERY = "SELECT * FROM gift_certificate WHERE %s LIKE ?";
-    private static final String SORT_QUERY = "SELECT * FROM gift_certificate ORDER BY %s %s";
+
     private TagDao tagDao;
 
     @Autowired
@@ -67,6 +66,38 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
         };
     }
 
+    public List<GiftCertificate> findWithParams(Map<String, String> params){
+        return getTemplate().query(prepareQueryWithParams(params), getRowMapper());
+    }
+    public String prepareQueryWithParams(Map<String, String> params) {
+        String query = "SELECT gift_certificate.id, gift_certificate.name, gift_certificate.description, gift_certificate.price, gift_certificate.duration, gift_certificate.create_date, gift_certificate.last_update_date FROM gift_certificate INNER JOIN tag_certificate ON gift_certificate.id = tag_certificate.gift_certificate_id LEFT JOIN tag ON tag_certificate.tag_id = tag.id ";
+        if (params.containsKey("tag_name")) {
+            if (!query.contains("WHERE")) {
+                query += "WHERE tag.name = \"" + params.get("tag_name") + "\" ";
+            } else {
+                query += "AND tag.name = \"" + params.get("tag_name") + "\" ";
+            }
+        }
+        if (params.containsKey("name")) {
+            if (!query.contains("WHERE")) {
+                query += "WHERE gift_certificate.name LIKE '%" + params.get("name") + "%' AND ";
+            } else {
+                query += "AND gift_certificate.name LIKE '%" + params.get("name") + "%' ";
+            }
+        }
+        if (params.containsKey("description")) {
+            if (!query.contains("WHERE")) {
+                query += "WHERE gift_certificate.description LIKE '%" + params.get("description") + "%' ";
+            } else {
+                query+= "AND gift_certificate.description LIKE '%" + params.get("description") + "%' ";
+            }
+        }
+        if(params.containsKey("sort_by") && params.containsKey("order")){
+            query+= "ORDER BY "+ params.get("sort_by")+" "+ params.get("order");
+        }
+        return query;
+    }
+
     @Override
     public PreparedStatementCreator getCreatorForUpdate(GiftCertificate certificate) {
         return con -> {
@@ -108,8 +139,8 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
         return query.toString();
     }
 
-    public List<GiftCertificate> findByTag(Tag tag) {
-        return getTemplate().query(FIND_BY_TAG_NAME_QUERY, getRowMapper(), tag.getName());
+    public List<GiftCertificate> findByTag(String tag) {
+        return getTemplate().query(FIND_BY_TAG_NAME_QUERY, getRowMapper(), tag);
     }
 
     public void add(GiftCertificate certificate, List<Tag> tags) {
@@ -122,7 +153,6 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
                 tag = search.get();
             }
             executeUpdate(ADD_TAG, certificate.getId(), tag.getId());
-
         });
     }
 
@@ -141,13 +171,5 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
             } catch (Exception ignored) {
             }
         });
-    }
-
-    public List<GiftCertificate> searchByPartOfField(String field, String value) {
-        return getTemplate().query(String.format(SEARCH_BY_FIELD_QUERY, field), getRowMapper(), "%".concat(value.concat("%")));
-    }
-
-    public List<GiftCertificate> sort(String field, String order) {
-        return getTemplate().query(String.format(SORT_QUERY, field, order), getRowMapper());
     }
 }

@@ -18,7 +18,6 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
     private static final String TABLE_NAME = "gift_certificate";
 
     private static final String ADD_QUERY = "INSERT INTO gift_certificate (name, description, price, duration) VALUES(?, ? ,?, ?)";
-    private static final String FIND_BY_TAG_NAME_QUERY = "SELECT gift_certificate.id, gift_certificate.name, gift_certificate.description, gift_certificate.price, gift_certificate.duration, gift_certificate.create_date, gift_certificate.last_update_date FROM gift_certificate INNER JOIN tag_certificate ON gift_certificate.id = tag_certificate.gift_certificate_id LEFT JOIN tag ON tag_certificate.tag_id = tag.id where tag.name = ?";
     private static final String ADD_TAG = "INSERT INTO tag_certificate (gift_certificate_id, tag_id) VALUES (?, ?)";
 
     private TagDao tagDao;
@@ -73,9 +72,9 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
         String query = "SELECT gift_certificate.id, gift_certificate.name, gift_certificate.description, gift_certificate.price, gift_certificate.duration, gift_certificate.create_date, gift_certificate.last_update_date FROM gift_certificate INNER JOIN tag_certificate ON gift_certificate.id = tag_certificate.gift_certificate_id LEFT JOIN tag ON tag_certificate.tag_id = tag.id ";
         if (params.containsKey("tag_name")) {
             if (!query.contains("WHERE")) {
-                query += "WHERE tag.name = \"" + params.get("tag_name") + "\" ";
+                query += "WHERE tag.name = \'" + params.get("tag_name") + "\' ";
             } else {
-                query += "AND tag.name = \"" + params.get("tag_name") + "\" ";
+                query += "AND tag.name = \'" + params.get("tag_name") + "\' ";
             }
         }
         if (params.containsKey("name")) {
@@ -137,10 +136,6 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
         query.delete(query.length() - 2, query.length() - 1);
         query.append(" WHERE id = ?");
         return query.toString();
-    }
-
-    public List<GiftCertificate> findByTag(String tag) {
-        return getTemplate().query(FIND_BY_TAG_NAME_QUERY, getRowMapper(), tag);
     }
 
     public void add(GiftCertificate certificate, List<Tag> tags) {

@@ -8,8 +8,6 @@ import java.util.Map;
 
 public interface GiftCertificateDao extends CrudDao<GiftCertificate> {
 
-    List<GiftCertificate> findByTag(String tag);
-
     void add(GiftCertificate certificate, List<Tag> tags);
 
     void update(GiftCertificate certificate, List<Tag> tags);

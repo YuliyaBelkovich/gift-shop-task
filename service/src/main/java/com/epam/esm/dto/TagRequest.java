@@ -2,14 +2,13 @@ package com.epam.esm.dto;
 
 import com.epam.esm.models.Tag;
 
-import javax.validation.constraints.Size;
+import java.util.Objects;
 
 public class TagRequest {
-    @Size(min = 0, max = 30)
+
     private String name;
 
-    public TagRequest() {
-    }
+    public TagRequest(){}
 
     public TagRequest(String name) {
         this.name = name;
@@ -23,11 +22,24 @@ public class TagRequest {
         this.name = name;
     }
 
-    public static TagRequest toDto(Tag tag){
-        return new TagRequest(tag.getName());
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TagRequest)) return false;
+        TagRequest that = (TagRequest) o;
+        return Objects.equals(getName(), that.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName());
     }
 
     public static Tag toIdentity(TagRequest request) {
         return Tag.builder().setName(request.getName()).build();
+    }
+
+    public static TagRequest toDto(Tag tag){
+        return new TagRequest(tag.getName());
     }
 }

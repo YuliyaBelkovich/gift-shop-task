@@ -1,29 +1,17 @@
 package com.epam.esm.dto;
 
 import com.epam.esm.models.GiftCertificate;
-import com.epam.esm.models.Tag;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 import java.util.List;
 
 public class GiftCertificateRequest {
-
-    @NotEmpty()
-    @Size(min = 2, max = 30)
     private String name;
-    @NotEmpty()
-    @Size(min = 2, max = 1000)
     private String description;
-    @Min(0)
     private double price;
-    @Min(1)
     private int duration;
     private List<String> tags;
 
-    public GiftCertificateRequest() {
-    }
+    public GiftCertificateRequest(){}
 
     public GiftCertificateRequest(String name, String description, double price, int duration, List<String> tags) {
         this.name = name;
@@ -74,7 +62,7 @@ public class GiftCertificateRequest {
         return tags;
     }
 
-    public GiftCertificate toIdentity(int id) {
+    public GiftCertificate toIdentity(int id){
         return GiftCertificate.builder()
                 .setId(id)
                 .setName(name)
@@ -84,7 +72,7 @@ public class GiftCertificateRequest {
                 .build();
     }
 
-    public static GiftCertificateRequest toDto(GiftCertificate giftCertificate, List<String> tags) {
-        return new GiftCertificateRequest(giftCertificate.getName(), giftCertificate.getDescription(), giftCertificate.getPrice(), giftCertificate.getDuration(), tags);
+    public static  GiftCertificateRequest toDto(GiftCertificate certificate, List<String> tags){
+        return new GiftCertificateRequest(certificate.getName(),certificate.getDescription(),certificate.getPrice(),certificate.getDuration(), tags);
     }
 }

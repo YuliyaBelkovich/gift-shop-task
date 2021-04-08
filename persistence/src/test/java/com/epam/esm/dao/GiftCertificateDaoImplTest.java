@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,15 +86,58 @@ class GiftCertificateDaoImplTest {
         assertEquals(gc1.getDuration(), actual.get(1).getDuration());
     }
 
-    @Test
-    void findByTag() {
-    }
 
     @Test
     void add() {
+        GiftCertificate testData = GiftCertificate.builder().setId(4)
+                .setName("test 4")
+                .setDescription("description 4")
+                .setPrice(4.0)
+                .setDuration(4)
+                .build();
+
+        dao.add(testData);
+
+        GiftCertificate actual = dao.findById(4).get();
+
+        assertNotNull(actual);
+
+        assertEquals(testData.getId(), actual.getId());
+        assertEquals(testData.getName(), actual.getName());
+        assertEquals(testData.getDescription(), actual.getDescription());
+        assertEquals(testData.getPrice(), actual.getPrice());
+        assertEquals(testData.getDuration(), actual.getDuration());
     }
 
     @Test
     void update() {
+        GiftCertificate testData = GiftCertificate.builder().setId(1)
+                .setName("test 4")
+                .setDescription("description 4")
+                .setPrice(4.0)
+                .setDuration(4)
+                .build();
+
+        dao.update(testData);
+
+        GiftCertificate actual = dao.findById(1).get();
+
+        assertNotNull(actual);
+
+        assertEquals(testData.getId(), actual.getId());
+        assertEquals(testData.getName(), actual.getName());
+        assertEquals(testData.getDescription(), actual.getDescription());
+        assertEquals(testData.getPrice(), actual.getPrice());
+        assertEquals(testData.getDuration(), actual.getDuration());
+
+    }
+
+    @Test
+    void delete(){
+        dao.delete(1);
+
+        GiftCertificate actual = dao.findById(1).orElse(null);
+
+        assertNull(actual);
     }
 }

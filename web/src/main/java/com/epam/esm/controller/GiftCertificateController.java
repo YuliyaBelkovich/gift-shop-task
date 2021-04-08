@@ -7,6 +7,7 @@ import com.epam.esm.exception.IdentityAlreadyExistsException;
 import com.epam.esm.exception.IdentityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.epam.esm.service.GiftCertificateService;
@@ -14,7 +15,7 @@ import com.epam.esm.service.GiftCertificateService;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/certificates", produces = "application/json")
+@RequestMapping(value = "/certificates", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 public class GiftCertificateController {
 
     public GiftCertificateService service;

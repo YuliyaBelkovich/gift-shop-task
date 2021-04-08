@@ -61,13 +61,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
     }
 
-    public GiftCertificateResponseContainer findByTag(String tag){
-        List<GiftCertificate> searchResult = giftCertificateCrudDao.findByTag(tag);
-        return new GiftCertificateResponseContainer(searchResult.stream()
-                .map(giftCertificate -> GiftCertificateResponse.toDto(giftCertificate, tagCrudDao.findByGiftId(giftCertificate.getId()))).collect(Collectors.toList()));
-    }
-
-
     public void update(GiftCertificateRequest certificate, int id) {
         GiftCertificate giftCertificate = certificate.toIdentity(id);
         giftCertificateCrudDao.update(giftCertificate,

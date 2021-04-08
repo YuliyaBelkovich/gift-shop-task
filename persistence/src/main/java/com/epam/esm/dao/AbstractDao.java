@@ -4,6 +4,7 @@ import com.epam.esm.models.Identifiable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
@@ -27,7 +28,7 @@ public abstract class AbstractDao<T extends Identifiable> implements CrudDao<T> 
         return template;
     }
 
-    public void executeUpdate(String sql, Object... args){
+    public void executeUpdate(String sql, Object... args) {
         template.update(sql, args);
     }
 
@@ -60,9 +61,10 @@ public abstract class AbstractDao<T extends Identifiable> implements CrudDao<T> 
 
 
     public void add(T identity) {
-            KeyHolder keyHolder = new GeneratedKeyHolder();
-            template.update(getCreatorForAdd(identity), keyHolder);
-            identity.setId(keyHolder.getKey().intValue());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        template.update(getCreatorForAdd(identity), keyHolder);
+        identity.setId((int) keyHolder.getKeys().get("id"));
+
     }
 
     public void update(T identity) {

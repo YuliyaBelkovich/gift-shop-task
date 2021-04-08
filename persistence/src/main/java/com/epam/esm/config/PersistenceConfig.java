@@ -4,6 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -25,6 +26,7 @@ public class PersistenceConfig {
     private String password;
     @Value("${ds.initPoolSize}")
     private int initPoolSize;
+
 
 
     @Bean(destroyMethod = "close")
@@ -57,7 +59,7 @@ public class PersistenceConfig {
     }
     @Bean
     @Profile("dev")
-    public JdbcTemplate getJdbcTemplate(){
+    public JdbcTemplate testJdbcTemplate(){
         return new JdbcTemplate(dataSource());
     }
 

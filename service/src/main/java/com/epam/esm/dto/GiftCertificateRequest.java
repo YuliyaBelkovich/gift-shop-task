@@ -71,4 +71,8 @@ public class GiftCertificateRequest {
                 .setPrice(price)
                 .build();
     }
+
+    public static  GiftCertificateRequest toDto(GiftCertificate certificate, List<String> tags){
+        return new GiftCertificateRequest(certificate.getName(),certificate.getDescription(),certificate.getPrice(),certificate.getDuration(), tags);
+    }
 }

@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<GiftShopErrorResponse> handleException(Exception e) {
-        return new ResponseEntity<>(new GiftShopErrorResponse(500, e.getClass().getName()+" on the server side occurred. Please try later"), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new GiftShopErrorResponse(500, "Exception on the server side occurred. Please try later"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

@@ -2,10 +2,7 @@ package com.epam.esm.config;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
@@ -25,7 +22,9 @@ public class PersistenceConfig {
     private int initPoolSize;
 
 
+
     @Bean(destroyMethod = "close")
+    @Profile("prod")
     public BasicDataSource basicDataSource(){
         BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setDriverClassName(driverClassName);
@@ -35,11 +34,10 @@ public class PersistenceConfig {
         basicDataSource.setInitialSize(initPoolSize);
         return basicDataSource;
     }
-
     @Bean
+    @Profile("prod")
     public JdbcTemplate jdbcTemplate(){
         return new JdbcTemplate(basicDataSource());
     }
-
 
 }

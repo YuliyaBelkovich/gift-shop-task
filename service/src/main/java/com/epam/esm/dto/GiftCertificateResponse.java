@@ -112,6 +112,7 @@ public class GiftCertificateResponse {
                 .build();
 
     }
+
     public static class Builder {
         private int id;
         private String name;
@@ -152,17 +153,18 @@ public class GiftCertificateResponse {
             return this;
         }
 
-        public Builder setCreateDate(LocalDateTime createDate){
+        public Builder setCreateDate(LocalDateTime createDate) {
             this.createDate = createDate;
             return this;
         }
-        public Builder setLastUpdateDate(LocalDateTime lastUpdateDate){
+
+        public Builder setLastUpdateDate(LocalDateTime lastUpdateDate) {
             this.lastUpdateDate = lastUpdateDate;
             return this;
         }
 
         public GiftCertificateResponse build() {
-            return new GiftCertificateResponse(id, name, description, price, duration, tags, createDate,lastUpdateDate);
+            return new GiftCertificateResponse(id, name, description, price, duration, tags, createDate, lastUpdateDate);
         }
     }
 }

@@ -1,0 +1,6 @@
+rootProject.name = 'gift-shop'
+include 'persistence'
+include 'service'
+include 'web'
+
+

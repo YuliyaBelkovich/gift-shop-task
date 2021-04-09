@@ -32,7 +32,8 @@ public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
     @Override
     public PreparedStatementCreator getCreatorForAdd(Tag identity) {
         return con -> {
-            PreparedStatement ps = con.prepareStatement(ADD_QUERY, PreparedStatement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = con.prepareStatement(ADD_QUERY,
+                    PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, identity.getName());
             return ps;
         };
@@ -52,14 +53,7 @@ public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
     }
 
     public List<Tag> findByGiftId(int id) {
-        return getTemplate().query(FIND_TAG_BY_GIFT_ID_QUERY, getRowMapper(), id);
+        return executeQuery(FIND_TAG_BY_GIFT_ID_QUERY, getRowMapper(), id);
     }
 
-    @Override
-    public void add(Tag identity, List<? extends Identifiable> list) {
-    }
-
-    @Override
-    public void update(Tag identity, List<? extends Identifiable> list) {
-    }
 }

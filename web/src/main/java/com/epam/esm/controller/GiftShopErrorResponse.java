@@ -1,11 +1,11 @@
 package com.epam.esm.controller;
 
-public class Error {
+public class GiftShopErrorResponse {
 
     private int code;
     private String message;
 
-    public Error(int code, String message) {
+    public GiftShopErrorResponse(int code, String message) {
         this.code = code;
         this.message = message;
     }

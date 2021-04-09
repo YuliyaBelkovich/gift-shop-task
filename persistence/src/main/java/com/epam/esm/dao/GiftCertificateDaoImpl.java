@@ -39,17 +39,16 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
 
     @Override
     public RowMapper<GiftCertificate> getRowMapper() {
-        return (rs, rn) -> {
-            return GiftCertificate.builder()
-                    .setId(rs.getInt("id"))
-                    .setName(rs.getString("name"))
-                    .setDescription(rs.getString("description"))
-                    .setPrice(rs.getDouble("price"))
-                    .setDuration(rs.getInt("duration"))
-                    .setCreateDate(rs.getTimestamp("create_date").toLocalDateTime())
-                    .setLastUpdateDate(rs.getTimestamp("last_update_date").toLocalDateTime())
-                    .build();
-        };
+        return (rs, rn) -> GiftCertificate.builder()
+                .setId(rs.getInt("id"))
+                .setName(rs.getString("name"))
+                .setDescription(rs.getString("description"))
+                .setPrice(rs.getDouble("price"))
+                .setDuration(rs.getInt("duration"))
+                .setCreateDate(rs.getTimestamp("create_date").toLocalDateTime())
+                .setLastUpdateDate(rs.getTimestamp("last_update_date").toLocalDateTime())
+                .build();
+
     }
 
     @Override
@@ -66,21 +65,22 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
         };
     }
 
-    public List<GiftCertificate> findWithParams(Map<String, String> params){
-        return getTemplate().query(prepareQueryWithParams(params), getRowMapper());
+    public List<GiftCertificate> findWithParams(Map<String, String> params) {
+        return executeQuery(prepareQueryWithParams(params), getRowMapper());
     }
+
     public String prepareQueryWithParams(Map<String, String> params) {
         String query = "SELECT gift_certificate.id, gift_certificate.name, gift_certificate.description, gift_certificate.price, gift_certificate.duration, gift_certificate.create_date, gift_certificate.last_update_date FROM gift_certificate INNER JOIN tag_certificate ON gift_certificate.id = tag_certificate.gift_certificate_id LEFT JOIN tag ON tag_certificate.tag_id = tag.id ";
         if (params.containsKey("tag_name")) {
             if (!query.contains("WHERE")) {
-                query += "WHERE tag.name = \"" + params.get("tag_name") + "\" ";
+                query += "WHERE tag.name = \'" + params.get("tag_name") + "\' ";
             } else {
-                query += "AND tag.name = \"" + params.get("tag_name") + "\" ";
+                query += "AND tag.name = \'" + params.get("tag_name") + "\' ";
             }
         }
         if (params.containsKey("name")) {
             if (!query.contains("WHERE")) {
-                query += "WHERE gift_certificate.name LIKE '%" + params.get("name") + "%' AND ";
+                query += "WHERE gift_certificate.name LIKE '%" + params.get("name") + "%' ";
             } else {
                 query += "AND gift_certificate.name LIKE '%" + params.get("name") + "%' ";
             }
@@ -89,11 +89,11 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
             if (!query.contains("WHERE")) {
                 query += "WHERE gift_certificate.description LIKE '%" + params.get("description") + "%' ";
             } else {
-                query+= "AND gift_certificate.description LIKE '%" + params.get("description") + "%' ";
+                query += "AND gift_certificate.description LIKE '%" + params.get("description") + "%' ";
             }
         }
-        if(params.containsKey("sort_by") && params.containsKey("order")){
-            query+= "ORDER BY "+ params.get("sort_by")+" "+ params.get("order");
+        if (params.containsKey("sort_by") && params.containsKey("order")) {
+            query += "ORDER BY " + params.get("sort_by") + " " + params.get("order");
         }
         return query;
     }
@@ -140,20 +140,19 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
     }
 
     public List<GiftCertificate> findByTag(String tag) {
-        return getTemplate().query(FIND_BY_TAG_NAME_QUERY, getRowMapper(), tag);
+        return executeQuery(FIND_BY_TAG_NAME_QUERY, getRowMapper(), tag);
     }
 
     public void add(GiftCertificate certificate, List<Tag> tags) {
         super.add(certificate);
-        tags.forEach(tag -> {
-            Optional<Tag> search = tagDao.findByName(tag.getName());
-            if (search.isEmpty()) {
-                tagDao.add(tag);
-            } else {
-                tag = search.get();
-            }
-            executeUpdate(ADD_TAG, certificate.getId(), tag.getId());
-        });
+        tags.forEach(tag ->
+                tagDao.findByName(tag.getName())
+                        .ifPresentOrElse(tag1 -> executeUpdate(ADD_TAG, certificate.getId(), tag1.getId()),
+                                () -> {
+                                    tagDao.add(tag);
+                                    executeUpdate(ADD_TAG, certificate.getId(), tag.getId());
+                                })
+        );
     }
 
     @Override

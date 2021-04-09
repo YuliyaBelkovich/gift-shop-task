@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/tags", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 public class TagController {
@@ -22,7 +24,7 @@ public class TagController {
 
 
     @GetMapping
-    public ResponseEntity<TagResponseContainer> findAll() {
+    public ResponseEntity<List<TagResponse>> findAll() {
         return ResponseEntity.ok(service.findAll());
     }
 

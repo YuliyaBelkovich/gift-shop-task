@@ -4,9 +4,11 @@ import com.epam.esm.dto.TagRequest;
 import com.epam.esm.dto.TagResponse;
 import com.epam.esm.dto.TagResponseContainer;
 
+import java.util.List;
+
 public interface TagService {
 
-    TagResponseContainer findAll();
+    List<TagResponse> findAll();
 
     TagResponse findById(int id);
 

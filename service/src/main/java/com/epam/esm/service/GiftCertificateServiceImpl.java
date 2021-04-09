@@ -11,12 +11,8 @@ import com.epam.esm.models.GiftCertificate;
 import com.epam.esm.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,16 +34,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return GiftCertificateResponse.toDto(giftCertificate, tagList);
     }
 
-    public GiftCertificateResponseContainer findAll() {
-        List<GiftCertificate> searchResult = giftCertificateCrudDao.findAll();
-        return new GiftCertificateResponseContainer(searchResult.stream()
-                .map(giftCertificate -> GiftCertificateResponse.toDto(giftCertificate, tagCrudDao.findByGiftId(giftCertificate.getId()))).collect(Collectors.toList()));
+    public List<GiftCertificateResponse> findAll() {
+        return giftCertificateCrudDao.findAll().stream()
+                .map(giftCertificate -> GiftCertificateResponse.toDto(giftCertificate, tagCrudDao.findByGiftId(giftCertificate.getId()))).collect(Collectors.toList());
     }
 
-    public GiftCertificateResponseContainer findAll(Map<String, String> params) {
-        List<GiftCertificate> searchResult = giftCertificateCrudDao.findWithParams(params);
-        return new GiftCertificateResponseContainer(searchResult.stream()
-                .map(giftCertificate -> GiftCertificateResponse.toDto(giftCertificate, tagCrudDao.findByGiftId(giftCertificate.getId()))).collect(Collectors.toList()));
+    public List<GiftCertificateResponse> findAll(Map<String, String> params) {
+        return giftCertificateCrudDao.findWithParams(params).stream()
+                .map(giftCertificate -> GiftCertificateResponse.toDto(giftCertificate, tagCrudDao.findByGiftId(giftCertificate.getId()))).collect(Collectors.toList());
     }
 
     public void save(GiftCertificateRequest certificate) {

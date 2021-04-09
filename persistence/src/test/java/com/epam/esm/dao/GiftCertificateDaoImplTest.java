@@ -1,6 +1,5 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.config.PersistenceConfig;
 import com.epam.esm.dao.config.PersistenceTestConfig;
 import com.epam.esm.models.GiftCertificate;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

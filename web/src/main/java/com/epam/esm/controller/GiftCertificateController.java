@@ -12,6 +12,7 @@ import com.epam.esm.service.GiftCertificateService;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,7 +27,7 @@ public class GiftCertificateController {
     }
 
     @GetMapping()
-    public ResponseEntity<GiftCertificateResponseContainer> getAll(@RequestParam(required = false) Map<String, String> allParams) {
+    public ResponseEntity<List<GiftCertificateResponse>> getAll(@RequestParam(required = false) Map<String, String> allParams) {
         if (allParams.isEmpty()) {
             return ResponseEntity.ok(service.findAll());
         } else {

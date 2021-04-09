@@ -4,10 +4,11 @@ import com.epam.esm.dto.GiftCertificateRequest;
 import com.epam.esm.dto.GiftCertificateResponse;
 import com.epam.esm.dto.GiftCertificateResponseContainer;
 
+import java.util.List;
 import java.util.Map;
 
 public interface GiftCertificateService {
-    GiftCertificateResponseContainer findAll();
+    List<GiftCertificateResponse> findAll();
 
     void save(GiftCertificateRequest certificate);
 
@@ -17,5 +18,5 @@ public interface GiftCertificateService {
 
     GiftCertificateResponse findById(int id);
 
-    GiftCertificateResponseContainer findAll(Map<String, String> params);
+    List<GiftCertificateResponse> findAll(Map<String, String> params);
 }

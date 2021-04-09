@@ -1,6 +1,5 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.config.PersistenceConfig;
 import com.epam.esm.dao.config.PersistenceTestConfig;
 import com.epam.esm.models.Tag;
 import org.junit.jupiter.api.Test;

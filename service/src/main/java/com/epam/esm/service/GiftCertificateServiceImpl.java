@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Validated
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private GiftCertificateDao giftCertificateCrudDao;
@@ -51,7 +50,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .map(giftCertificate -> GiftCertificateResponse.toDto(giftCertificate, tagCrudDao.findByGiftId(giftCertificate.getId()))).collect(Collectors.toList()));
     }
 
-    public void save(@Valid GiftCertificateRequest certificate) {
+    public void save(GiftCertificateRequest certificate) {
         GiftCertificate giftCertificate = certificate.toIdentity(0);
         if (giftCertificateCrudDao.findByName(giftCertificate.getName()).isEmpty()) {
             giftCertificateCrudDao.add(giftCertificate,
@@ -59,12 +58,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         } else {
             throw new ServiceException(ExceptionManager.IDENTITY_ALREADY_EXISTS);
         }
-    }
-
-    public GiftCertificateResponseContainer findByTag(String tag) {
-        List<GiftCertificate> searchResult = giftCertificateCrudDao.findByTag(tag);
-        return new GiftCertificateResponseContainer(searchResult.stream()
-                .map(giftCertificate -> GiftCertificateResponse.toDto(giftCertificate, tagCrudDao.findByGiftId(giftCertificate.getId()))).collect(Collectors.toList()));
     }
 
 

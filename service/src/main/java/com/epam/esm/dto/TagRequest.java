@@ -5,7 +5,7 @@ import com.epam.esm.models.Tag;
 import javax.validation.constraints.Size;
 
 public class TagRequest {
-    @Size(min = 0, max = 30)
+    @Size(min = 0, max = 30, message = "Name should be grater than 2 and no longer than 30 symbols")
     private String name;
 
     public TagRequest() {

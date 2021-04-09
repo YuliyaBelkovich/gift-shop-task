@@ -29,13 +29,13 @@ dependencies {
 
     testImplementation 'org.mockito:mockito-inline:3.8.0'
 
-    implementation group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.1.Final'
+    implementation 'org.hibernate:hibernate-validator:7.0.1.Final'
 
-    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+
+    implementation group: 'org.hibernate.validator', name: 'hibernate-validator-annotation-processor', version: '7.0.1.Final'
 
     implementation project(":persistence")
-
-    testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
 }
 
 test {

@@ -15,7 +15,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-@Validated
 public class TagServiceImpl implements TagService {
     private TagDao tagDao;
 
@@ -32,7 +31,7 @@ public class TagServiceImpl implements TagService {
         return TagResponse.toDto(Objects.requireNonNull(tagDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionManager.IDENTITY_NOT_FOUND))));
     }
 
-    public void save(@Valid TagRequest tag) {
+    public void save(TagRequest tag) {
         if (tagDao.findByName(tag.getName()).isEmpty()) {
             tagDao.add(TagRequest.toIdentity(tag));
         } else {

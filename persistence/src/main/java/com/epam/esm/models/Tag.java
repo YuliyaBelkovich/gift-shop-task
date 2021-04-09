@@ -33,8 +33,12 @@ public class Tag implements Identifiable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Tag)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Tag)) {
+            return false;
+        }
         Tag tag = (Tag) o;
         return getId() == tag.getId() && getName().equals(tag.getName());
     }
@@ -44,8 +48,8 @@ public class Tag implements Identifiable {
         return Objects.hash(getId(), getName());
     }
 
-    public static Builder builder(){
-        return  new Builder();
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {
@@ -63,8 +67,8 @@ public class Tag implements Identifiable {
             return this;
         }
 
-        public Tag build(){
-            return new Tag(id,name);
+        public Tag build() {
+            return new Tag(id, name);
         }
     }
 }

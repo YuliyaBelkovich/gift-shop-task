@@ -3,7 +3,6 @@ package com.epam.esm.service;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.TagRequest;
 import com.epam.esm.dto.TagResponse;
-import com.epam.esm.dto.TagResponseContainer;
 import com.epam.esm.models.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

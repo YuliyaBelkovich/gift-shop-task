@@ -1,7 +1,6 @@
 package com.epam.esm.dto;
 
 import com.epam.esm.models.GiftCertificate;
-import com.epam.esm.models.Tag;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -10,10 +9,10 @@ import java.util.List;
 
 public class GiftCertificateRequest {
 
-    @NotEmpty()
+    @NotEmpty(message = "Please, provide a name")
     @Size(min = 2, max = 30, message = "Name should be grater than 2 and no longer than 30 symbols")
     private String name;
-    @NotEmpty()
+    @NotEmpty(message = "Please, provide a description")
     @Size(min = 2, max = 1000, message = "Description should be grater than 2 and no longer than 1000 symbols")
     private String description;
     @Min(value = 0, message = "Price shouldn't be less than zero")
@@ -85,6 +84,7 @@ public class GiftCertificateRequest {
     }
 
     public static GiftCertificateRequest toDto(GiftCertificate giftCertificate, List<String> tags) {
-        return new GiftCertificateRequest(giftCertificate.getName(), giftCertificate.getDescription(), giftCertificate.getPrice(), giftCertificate.getDuration(), tags);
+        return new GiftCertificateRequest(giftCertificate.getName(), giftCertificate.getDescription(),
+                giftCertificate.getPrice(), giftCertificate.getDuration(), tags);
     }
 }

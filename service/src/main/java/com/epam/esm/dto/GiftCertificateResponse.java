@@ -101,10 +101,20 @@ public class GiftCertificateResponse {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof GiftCertificateResponse)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof GiftCertificateResponse)) {
+            return false;
+        }
         GiftCertificateResponse that = (GiftCertificateResponse) o;
-        return getId() == that.getId() && Double.compare(that.getPrice(), getPrice()) == 0 && getDuration() == that.getDuration() && Objects.equals(getName(), that.getName()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getTags(), that.getTags()) && Objects.equals(getCreateDate(), that.getCreateDate()) && Objects.equals(getLastUpdateDate(), that.getLastUpdateDate());
+        return getId() == that.getId() && Double.compare(that.getPrice(), getPrice()) == 0
+                && getDuration() == that.getDuration()
+                && Objects.equals(getName(), that.getName())
+                && Objects.equals(getDescription(), that.getDescription())
+                && Objects.equals(getTags(), that.getTags())
+                && Objects.equals(getCreateDate(), that.getCreateDate())
+                && Objects.equals(getLastUpdateDate(), that.getLastUpdateDate());
     }
 
     @Override

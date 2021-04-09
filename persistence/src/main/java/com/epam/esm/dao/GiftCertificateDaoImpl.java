@@ -18,8 +18,8 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
     private static final String TABLE_NAME = "gift_certificate";
 
     private static final String ADD_QUERY = "INSERT INTO gift_certificate (name, description, price, duration) VALUES(?, ? ,?, ?)";
-    private static final String FIND_BY_TAG_NAME_QUERY = "SELECT gift_certificate.id, gift_certificate.name, gift_certificate.description, gift_certificate.price, gift_certificate.duration, gift_certificate.create_date, gift_certificate.last_update_date FROM gift_certificate INNER JOIN tag_certificate ON gift_certificate.id = tag_certificate.gift_certificate_id LEFT JOIN tag ON tag_certificate.tag_id = tag.id where tag.name = ?";
-    private static final String ADD_TAG = "INSERT INTO tag_certificate (gift_certificate_id, tag_id) VALUES (?, ?)";
+    private static final String FIND_WITH_PARAMS_QUERY = "SELECT gift_certificate.id, gift_certificate.name, gift_certificate.description, gift_certificate.price, gift_certificate.duration, gift_certificate.create_date, gift_certificate.last_update_date FROM gift_certificate INNER JOIN tag_certificate ON gift_certificate.id = tag_certificate.gift_certificate_id LEFT JOIN tag ON tag_certificate.tag_id = tag.id ?";
+    private static final String ADD_TAG_QUERY = "INSERT INTO tag_certificate (gift_certificate_id, tag_id) VALUES (?, ?)";
 
     private TagDao tagDao;
 
@@ -70,7 +70,7 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
     }
 
     public String prepareQueryWithParams(Map<String, String> params) {
-        String query = "SELECT gift_certificate.id, gift_certificate.name, gift_certificate.description, gift_certificate.price, gift_certificate.duration, gift_certificate.create_date, gift_certificate.last_update_date FROM gift_certificate INNER JOIN tag_certificate ON gift_certificate.id = tag_certificate.gift_certificate_id LEFT JOIN tag ON tag_certificate.tag_id = tag.id ";
+        String query = FIND_WITH_PARAMS_QUERY;
         if (params.containsKey("tag_name")) {
             if (!query.contains("WHERE")) {
                 query += "WHERE tag.name = \'" + params.get("tag_name") + "\' ";
@@ -139,18 +139,14 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
         return query.toString();
     }
 
-    public List<GiftCertificate> findByTag(String tag) {
-        return executeQuery(FIND_BY_TAG_NAME_QUERY, getRowMapper(), tag);
-    }
-
     public void add(GiftCertificate certificate, List<Tag> tags) {
         super.add(certificate);
         tags.forEach(tag ->
                 tagDao.findByName(tag.getName())
-                        .ifPresentOrElse(tag1 -> executeUpdate(ADD_TAG, certificate.getId(), tag1.getId()),
+                        .ifPresentOrElse(tag1 -> executeUpdate(ADD_TAG_QUERY, certificate.getId(), tag1.getId()),
                                 () -> {
                                     tagDao.add(tag);
-                                    executeUpdate(ADD_TAG, certificate.getId(), tag.getId());
+                                    executeUpdate(ADD_TAG_QUERY, certificate.getId(), tag.getId());
                                 })
         );
     }
@@ -166,9 +162,8 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
                 tag = search.get();
             }
             try {
-                executeUpdate(ADD_TAG, certificate.getId(), tag.getId());
-            } catch (Exception ignored) {
-            }
+                executeUpdate(ADD_TAG_QUERY, certificate.getId(), tag.getId());
+            } catch (Exception ignored) {}
         });
     }
 }

@@ -13,7 +13,6 @@ import javax.servlet.ServletContext;
 @ComponentScan("com.epam.esm")
 @PropertySource("classpath:application.properties")
 @EnableWebMvc
-//@Import(ServiceConfig.class)
 public class WebConfig implements WebMvcConfigurer, WebApplicationInitializer {
 
     @Override

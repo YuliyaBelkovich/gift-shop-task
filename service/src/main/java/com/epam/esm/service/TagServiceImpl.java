@@ -3,14 +3,12 @@ package com.epam.esm.service;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.TagRequest;
 import com.epam.esm.dto.TagResponse;
-import com.epam.esm.dto.TagResponseContainer;
 import com.epam.esm.exception.ExceptionManager;
 import com.epam.esm.exception.ServiceException;
+import com.epam.esm.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -29,15 +27,18 @@ public class TagServiceImpl implements TagService {
     }
 
     public TagResponse findById(int id) {
-        return TagResponse.toDto(Objects.requireNonNull(tagDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionManager.IDENTITY_NOT_FOUND))));
+        return TagResponse.toDto(Objects.requireNonNull(tagDao.findById(id)
+                .orElseThrow(() -> new ServiceException(ExceptionManager.IDENTITY_NOT_FOUND))));
     }
 
-    public void save(TagRequest tag) {
+    public TagResponse save(TagRequest tag) {
+        Tag tagToSave = TagRequest.toIdentity(tag);
         if (tagDao.findByName(tag.getName()).isEmpty()) {
-            tagDao.add(TagRequest.toIdentity(tag));
+            tagDao.add(tagToSave);
         } else {
             throw new ServiceException(ExceptionManager.IDENTITY_ALREADY_EXISTS);
         }
+        return findById(tagToSave.getId());
     }
 
     public void delete(int id) {

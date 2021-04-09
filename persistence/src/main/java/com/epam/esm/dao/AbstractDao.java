@@ -27,8 +27,8 @@ public abstract class AbstractDao<T extends Identifiable> implements CrudDao<T> 
         template.update(sql, args);
     }
 
-    public List<T> executeQuery(String sql, RowMapper<T> rowMapper, Object...args){
-        return template.query(sql, rowMapper,args);
+    public List<T> executeQuery(String sql, RowMapper<T> rowMapper, Object... args) {
+        return template.query(sql, rowMapper, args);
     }
 
     public abstract String getTableName();
@@ -61,11 +61,7 @@ public abstract class AbstractDao<T extends Identifiable> implements CrudDao<T> 
 
     public void add(T identity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        try {
-            template.update(getCreatorForAdd(identity), keyHolder);
-        } catch (Exception e){
-
-        }
+        template.update(getCreatorForAdd(identity), keyHolder);
         try {
             identity.setId((int) keyHolder.getKeys().get("id"));
         } catch (NullPointerException e) {

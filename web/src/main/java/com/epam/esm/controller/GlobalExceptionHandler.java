@@ -14,10 +14,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ServiceException.class)
     public final ResponseEntity<GiftShopErrorResponse> handleServiceException(ServiceException e) {
-        return new ResponseEntity<>(new GiftShopErrorResponse(e.getExceptionManager().getErrorCode(), e.getExceptionManager().getMessage()), e.getExceptionManager().getStatus());
+    return ResponseEntity
+            .status(e.getExceptionManager().getStatus())
+            .body(new GiftShopErrorResponse(e.getExceptionManager().getErrorCode(),e.getExceptionManager().getMessage()));
     }
 
-    //todo
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public final ResponseEntity<GiftShopErrorResponse> handleValidationException(MethodArgumentNotValidException e, HttpHeaders headers,
                                                                                  HttpStatus status, WebRequest request) {
@@ -26,7 +27,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<GiftShopErrorResponse> handleException(Exception e) {
-        return new ResponseEntity<>(new GiftShopErrorResponse(500, "Exception on the server side occurred. Please try later"), HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new GiftShopErrorResponse(500, "Exception on the server side occurred. Please try later"));
     }
 
 }

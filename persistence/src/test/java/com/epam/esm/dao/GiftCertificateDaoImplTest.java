@@ -1,6 +1,7 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.config.PersistenceConfig;
+import com.epam.esm.dao.config.PersistenceTestConfig;
 import com.epam.esm.models.GiftCertificate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +19,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = PersistenceConfig.class)
+@ContextConfiguration(classes = PersistenceTestConfig.class)
 @Component
 @ActiveProfiles("dev")
 class GiftCertificateDaoImplTest {

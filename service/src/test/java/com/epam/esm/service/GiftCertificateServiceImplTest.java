@@ -1,15 +1,11 @@
 package com.epam.esm.service;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import com.epam.esm.dao.GiftCertificateDaoImpl;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.GiftCertificateRequest;
 import com.epam.esm.dto.GiftCertificateResponse;
 import com.epam.esm.dto.GiftCertificateResponseContainer;
 import com.epam.esm.models.GiftCertificate;
-import com.epam.esm.models.Tag;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -35,10 +31,6 @@ class GiftCertificateServiceImplTest {
     @Mock
     TagDao tagDao;
 
-    @BeforeEach
-    public void init() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void findById() {

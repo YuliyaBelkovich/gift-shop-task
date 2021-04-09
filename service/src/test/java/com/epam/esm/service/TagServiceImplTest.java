@@ -32,14 +32,12 @@ class TagServiceImplTest {
        List<Tag> tagList =  new ArrayList<>();
        tagList.add(firstTag);
 
-       List<TagResponse> responseList = new ArrayList<>();
-       responseList.add(TagResponse.toDto(firstTag));
-
-        TagResponseContainer expected = new TagResponseContainer(responseList);
+       List<TagResponse> expected = new ArrayList<>();
+       expected.add(TagResponse.toDto(firstTag));
 
         Mockito.when(tagDao.findAll()).thenReturn(tagList);
 
-        TagResponseContainer actual = service.findAll();
+        List<TagResponse> actual = service.findAll();
 
         assertEquals(expected, actual);
     }

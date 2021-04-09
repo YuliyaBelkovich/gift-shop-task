@@ -67,15 +67,13 @@ class GiftCertificateServiceImplTest {
         List<GiftCertificate> testDataList = new ArrayList<>();
         testDataList.add(testData);
 
-        List<GiftCertificateResponse> testList = new ArrayList<>();
-        testList.add(GiftCertificateResponse.toDto(testData, new ArrayList<>()));
-
-        GiftCertificateResponseContainer expected = new GiftCertificateResponseContainer(testList);
+        List<GiftCertificateResponse> expected = new ArrayList<>();
+        expected.add(GiftCertificateResponse.toDto(testData, new ArrayList<>()));
 
         Mockito.when(dao.findAll()).thenReturn(testDataList);
         Mockito.when(tagDao.findByGiftId(1)).thenReturn(new ArrayList<>());
 
-        GiftCertificateResponseContainer actual = service.findAll();
+       List<GiftCertificateResponse> actual = service.findAll();
 
         assertEquals(expected, actual);
 

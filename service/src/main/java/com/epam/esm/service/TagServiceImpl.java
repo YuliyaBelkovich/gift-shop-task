@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -23,8 +24,8 @@ public class TagServiceImpl implements TagService {
         this.tagDao = tagDao;
     }
 
-    public TagResponseContainer findAll() {
-        return new TagResponseContainer(tagDao.findAll().stream().map(TagResponse::toDto).collect(Collectors.toList()));
+    public List<TagResponse> findAll() {
+        return tagDao.findAll().stream().map(TagResponse::toDto).collect(Collectors.toList());
     }
 
     public TagResponse findById(int id) {

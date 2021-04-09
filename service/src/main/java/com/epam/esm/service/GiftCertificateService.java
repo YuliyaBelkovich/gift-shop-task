@@ -15,8 +15,6 @@ public interface GiftCertificateService {
 
     void delete(int id);
 
-    GiftCertificateResponseContainer findByTag(String tag);
-
     GiftCertificateResponse findById(int id);
 
     GiftCertificateResponseContainer findAll(Map<String, String> params);

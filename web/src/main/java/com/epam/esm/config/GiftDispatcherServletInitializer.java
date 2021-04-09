@@ -17,6 +17,12 @@ public class GiftDispatcherServletInitializer extends AbstractAnnotationConfigDi
     }
 
     @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        servletContext.setInitParameter(
+                "active.profile", "prod");
+    }
+
+    @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
     }

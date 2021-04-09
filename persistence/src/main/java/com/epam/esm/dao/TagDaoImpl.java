@@ -1,6 +1,5 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.models.Identifiable;
 import com.epam.esm.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,9 +41,9 @@ public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
     @Override
     public RowMapper<Tag> getRowMapper() {
         return (rs, rowNum) -> Tag.builder()
-                 .setId(rs.getInt("id"))
-                 .setName(rs.getString("name"))
-                 .build();
+                .setId(rs.getInt("id"))
+                .setName(rs.getString("name"))
+                .build();
     }
 
     @Override

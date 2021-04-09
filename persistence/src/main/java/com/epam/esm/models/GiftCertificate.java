@@ -15,7 +15,7 @@ public class GiftCertificate implements Identifiable {
     private GiftCertificate() {
     }
 
-   private GiftCertificate(int id, String name, String description, double price, int duration, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
+    private GiftCertificate(int id, String name, String description, double price, int duration, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -90,7 +90,10 @@ public class GiftCertificate implements Identifiable {
             return false;
         }
         GiftCertificate that = (GiftCertificate) o;
-        return getId() == that.getId() && Double.compare(that.getPrice(), getPrice()) == 0 && getDuration() == that.getDuration() && Objects.equals(getName(), that.getName()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getCreateDate(), that.getCreateDate()) && Objects.equals(getLastUpdateDate(), that.getLastUpdateDate());
+        return getId() == that.getId()
+                && Double.compare(that.getPrice(), getPrice()) == 0 && getDuration() == that.getDuration()
+                && Objects.equals(getName(), that.getName()) && Objects.equals(getDescription(), that.getDescription())
+                && Objects.equals(getCreateDate(), that.getCreateDate()) && Objects.equals(getLastUpdateDate(), that.getLastUpdateDate());
     }
 
     @Override
@@ -111,7 +114,7 @@ public class GiftCertificate implements Identifiable {
                 '}';
     }
 
-    public static Builder builder(){
+    public static Builder builder() {
         return new Builder();
     }
 

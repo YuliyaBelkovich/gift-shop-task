@@ -3,9 +3,10 @@ package com.epam.esm.dto;
 import com.epam.esm.models.Tag;
 
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 public class TagRequest {
-    @Size(min = 0, max = 30, message = "Name should be grater than 2 and no longer than 30 symbols")
+    @Size(max = 30, message = "Name should be grater than 2 and no longer than 30 symbols")
     private String name;
 
     public TagRequest() {
@@ -23,7 +24,24 @@ public class TagRequest {
         this.name = name;
     }
 
-    public static TagRequest toDto(Tag tag){
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof TagRequest)) {
+            return false;
+        }
+        TagRequest that = (TagRequest) o;
+        return Objects.equals(getName(), that.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName());
+    }
+
+    public static TagRequest toDto(Tag tag) {
         return new TagRequest(tag.getName());
     }
 

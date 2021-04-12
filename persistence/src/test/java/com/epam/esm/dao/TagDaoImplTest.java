@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = PersistenceTestConfig.class)
 @Component
-@ActiveProfiles("dev")
 class TagDaoImplTest {
     @Autowired
     private TagDao dao;
@@ -37,7 +36,6 @@ class TagDaoImplTest {
     public void findAll() {
         Tag firstTag = Tag.builder().setId(1).setName("test tag 1").build();
         Tag secondTag = Tag.builder().setId(2).setName("test tag 2").build();
-        Tag thirdTag = Tag.builder().setId(3).setName("test tag 3").build();
         List<Tag> actual = dao.findAll();
 
         assertNotNull(actual);
@@ -46,9 +44,6 @@ class TagDaoImplTest {
 
         assertEquals(secondTag.getId(), actual.get(1).getId());
         assertEquals(secondTag.getName(), actual.get(1).getName());
-
-        assertEquals(thirdTag.getId(), actual.get(2).getId());
-        assertEquals(thirdTag.getName(), actual.get(2).getName());
     }
 
     @Test
@@ -67,9 +62,9 @@ class TagDaoImplTest {
 
     @Test
     public void delete(){
-        dao.delete(1);
+        dao.delete(3);
 
-        Tag actual = dao.findById(1).orElse(null);
+        Tag actual = dao.findById(3).orElse(null);
 
         assertNull(actual);
     }

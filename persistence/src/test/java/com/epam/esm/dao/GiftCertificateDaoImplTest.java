@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = PersistenceTestConfig.class)
 @Component
-@ActiveProfiles("dev")
 class GiftCertificateDaoImplTest {
 
     @Autowired
@@ -48,7 +47,7 @@ class GiftCertificateDaoImplTest {
     @Test
     void findWithParams() {
         Map<String, String> params = new HashMap<>();
-        params.put("tag_name","test tag 1");
+        params.put("tag_name", "test tag 1");
         params.put("name", "test");
         params.put("sort_by", "name");
         params.put("order", "DESC");
@@ -70,7 +69,7 @@ class GiftCertificateDaoImplTest {
         List<GiftCertificate> actual = dao.findWithParams(params);
 
         assertNotNull(actual);
-        assertEquals(2,actual.size());
+        assertEquals(2, actual.size());
 
         assertEquals(gc2.getId(), actual.get(0).getId());
         assertEquals(gc2.getName(), actual.get(0).getName());
@@ -88,16 +87,16 @@ class GiftCertificateDaoImplTest {
 
     @Test
     void add() {
-        GiftCertificate testData = GiftCertificate.builder().setId(4)
-                .setName("test 4")
-                .setDescription("description 4")
-                .setPrice(4.0)
-                .setDuration(4)
+        GiftCertificate testData = GiftCertificate.builder().setId(6)
+                .setName("test 6")
+                .setDescription("description 6")
+                .setPrice(6.0)
+                .setDuration(6)
                 .build();
 
         dao.add(testData);
 
-        GiftCertificate actual = dao.findById(4).get();
+        GiftCertificate actual = dao.findById(6).get();
 
         assertNotNull(actual);
 
@@ -110,16 +109,16 @@ class GiftCertificateDaoImplTest {
 
     @Test
     void update() {
-        GiftCertificate testData = GiftCertificate.builder().setId(1)
-                .setName("test 4")
-                .setDescription("description 4")
-                .setPrice(4.0)
-                .setDuration(4)
+        GiftCertificate testData = GiftCertificate.builder().setId(5)
+                .setName("test 7")
+                .setDescription("description 7")
+                .setPrice(7.0)
+                .setDuration(2)
                 .build();
 
         dao.update(testData);
 
-        GiftCertificate actual = dao.findById(1).get();
+        GiftCertificate actual = dao.findById(5).get();
 
         assertNotNull(actual);
 
@@ -132,10 +131,10 @@ class GiftCertificateDaoImplTest {
     }
 
     @Test
-    void delete(){
-        dao.delete(1);
+    void delete() {
+        dao.delete(4);
 
-        GiftCertificate actual = dao.findById(1).orElse(null);
+        GiftCertificate actual = dao.findById(4).orElse(null);
 
         assertNull(actual);
     }

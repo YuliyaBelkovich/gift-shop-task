@@ -18,7 +18,7 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
     private static final String TABLE_NAME = "gift_certificate";
 
     private static final String ADD_QUERY = "INSERT INTO gift_certificate (name, description, price, duration) VALUES(?, ? ,?, ?)";
-    private static final String FIND_WITH_PARAMS_QUERY = "SELECT gift_certificate.id, gift_certificate.name, gift_certificate.description, gift_certificate.price, gift_certificate.duration, gift_certificate.create_date, gift_certificate.last_update_date FROM gift_certificate INNER JOIN tag_certificate ON gift_certificate.id = tag_certificate.gift_certificate_id LEFT JOIN tag ON tag_certificate.tag_id = tag.id ?";
+    private static final String FIND_WITH_PARAMS_QUERY = "SELECT gift_certificate.id, gift_certificate.name, gift_certificate.description, gift_certificate.price, gift_certificate.duration, gift_certificate.create_date, gift_certificate.last_update_date FROM gift_certificate INNER JOIN tag_certificate ON gift_certificate.id = tag_certificate.gift_certificate_id LEFT JOIN tag ON tag_certificate.tag_id = tag.id ";
     private static final String ADD_TAG_QUERY = "INSERT INTO tag_certificate (gift_certificate_id, tag_id) VALUES (?, ?)";
 
     private TagDao tagDao;

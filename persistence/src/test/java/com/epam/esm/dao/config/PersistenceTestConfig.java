@@ -15,7 +15,6 @@ import javax.sql.DataSource;
 @ComponentScan("com.epam.esm")
 public class PersistenceTestConfig {
     @Bean
-    @Profile("dev")
     public DataSource dataSource() {
         EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
         EmbeddedDatabase db = builder
@@ -26,7 +25,6 @@ public class PersistenceTestConfig {
         return db;
     }
     @Bean
-    @Profile("dev")
     public JdbcTemplate testJdbcTemplate(){
         return new JdbcTemplate(dataSource());
     }

@@ -103,10 +103,10 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
         return con -> {
             int i = 0;
             PreparedStatement ps = con.prepareStatement(prepareUpdate(certificate));
-            if (!certificate.getName().equals("")) {
+            if (StringUtils.isNotBlank(certificate.getName())) {
                 ps.setString(++i, certificate.getName());
             }
-            if (!certificate.getDescription().equals("")) {
+            if (StringUtils.isNotBlank(certificate.getDescription())) {
                 ps.setString(++i, certificate.getDescription());
             }
             if (certificate.getPrice() != 0) {

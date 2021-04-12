@@ -2,9 +2,13 @@ package com.epam.esm.dto;
 
 import com.epam.esm.models.Tag;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class TagRequest {
+    @NotNull
+    @Size(min = 2, max = 30, message = "Name length should be between 2 and 30 symbols")
     private String name;
 
     public TagRequest() {

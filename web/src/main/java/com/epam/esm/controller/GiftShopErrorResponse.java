@@ -1,20 +1,22 @@
 package com.epam.esm.controller;
 
+import java.util.List;
+
 public class GiftShopErrorResponse {
 
     private int code;
-    private String message;
+    private List<String> details;
 
-    public GiftShopErrorResponse(int code, String message) {
+    public GiftShopErrorResponse(int code, List<String> details) {
         this.code = code;
-        this.message = message;
+        this.details = details;
     }
 
     public int getCode() {
         return code;
     }
 
-    public String getMessage() {
-        return message;
+    public List<String> getMessage() {
+        return details;
     }
 }

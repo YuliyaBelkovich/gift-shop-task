@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,12 +35,12 @@ public class TagController {
     }
 
     @PostMapping
-    public ResponseEntity<TagResponse> add(@RequestBody TagRequest tag) {
+    public ResponseEntity<TagResponse> add(@RequestBody @Valid TagRequest tag) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(tag));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable("id") int id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") int id) {
         service.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

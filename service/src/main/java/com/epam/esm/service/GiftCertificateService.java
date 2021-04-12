@@ -2,6 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.dto.GiftCertificateRequest;
 import com.epam.esm.dto.GiftCertificateResponse;
+import com.epam.esm.dto.GiftCertificateUpdateRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,7 @@ public interface GiftCertificateService {
 
     GiftCertificateResponse save(GiftCertificateRequest certificate);
 
-    void update(GiftCertificateRequest certificate, int id);
+    void update(GiftCertificateUpdateRequest certificate, int id);
 
     void delete(int id);
 

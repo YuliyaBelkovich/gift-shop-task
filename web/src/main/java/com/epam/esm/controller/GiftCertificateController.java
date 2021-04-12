@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.epam.esm.service.GiftCertificateService;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -41,12 +40,12 @@ public class GiftCertificateController {
     }
 
     @PostMapping
-    public ResponseEntity<GiftCertificateResponse> createCertificate(@Valid @RequestBody GiftCertificateRequest certificate) {
+    public ResponseEntity<GiftCertificateResponse> createCertificate(@RequestBody GiftCertificateRequest certificate) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(certificate));
     }
 
     @PatchMapping("/{id}")
-    public void edit(@Valid @RequestBody GiftCertificateRequest certificate, @PathVariable("id") int id) {
+    public void edit(@RequestBody GiftCertificateRequest certificate, @PathVariable("id") int id) {
         service.update(certificate, id);
     }
 

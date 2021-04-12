@@ -2,22 +2,13 @@ package com.epam.esm.dto;
 
 import com.epam.esm.models.GiftCertificate;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 import java.util.List;
 
 public class GiftCertificateRequest {
 
-    @NotEmpty(message = "Please, provide a name")
-    @Size(min = 2, max = 30, message = "Name should be grater than 2 and no longer than 30 symbols")
     private String name;
-    @NotEmpty(message = "Please, provide a description")
-    @Size(min = 2, max = 1000, message = "Description should be grater than 2 and no longer than 1000 symbols")
     private String description;
-    @Min(value = 0, message = "Price shouldn't be less than zero")
     private double price;
-    @Min(value = 1, message = "Duration can't be less than 1 day")
     private int duration;
     private List<String> tags;
 

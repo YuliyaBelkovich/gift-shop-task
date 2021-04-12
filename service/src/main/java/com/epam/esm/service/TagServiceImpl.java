@@ -9,6 +9,7 @@ import com.epam.esm.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ValidationException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -32,6 +33,9 @@ public class TagServiceImpl implements TagService {
     }
 
     public TagResponse save(TagRequest tag) {
+        if (tag.getName().isEmpty() || tag.getName().length() > 29) {
+            throw new ValidationException("Name length should be between 1 and 30 symbols");
+        }
         Tag tagToSave = TagRequest.toIdentity(tag);
         if (tagDao.findByName(tag.getName()).isEmpty()) {
             tagDao.add(tagToSave);

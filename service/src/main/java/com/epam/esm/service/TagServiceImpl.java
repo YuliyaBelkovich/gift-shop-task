@@ -3,7 +3,7 @@ package com.epam.esm.service;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.TagRequest;
 import com.epam.esm.dto.TagResponse;
-import com.epam.esm.exception.ExceptionManager;
+import com.epam.esm.exception.ExceptionDefinition;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,18 +29,15 @@ public class TagServiceImpl implements TagService {
 
     public TagResponse findById(int id) {
         return TagResponse.toDto(Objects.requireNonNull(tagDao.findById(id)
-                .orElseThrow(() -> new ServiceException(ExceptionManager.IDENTITY_NOT_FOUND))));
+                .orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND))));
     }
 
     public TagResponse save(TagRequest tag) {
-        if (tag.getName().isEmpty() || tag.getName().length() > 29) {
-            throw new ValidationException("Name length should be between 1 and 30 symbols");
-        }
         Tag tagToSave = TagRequest.toIdentity(tag);
         if (tagDao.findByName(tag.getName()).isEmpty()) {
             tagDao.add(tagToSave);
         } else {
-            throw new ServiceException(ExceptionManager.IDENTITY_ALREADY_EXISTS);
+            throw new ServiceException(ExceptionDefinition.IDENTITY_ALREADY_EXISTS);
         }
         return findById(tagToSave.getId());
     }

@@ -4,10 +4,14 @@ import com.epam.esm.dao.GiftCertificateDaoImpl;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.GiftCertificateRequest;
 import com.epam.esm.dto.GiftCertificateResponse;
+import com.epam.esm.dto.GiftCertificateUpdateRequest;
 import com.epam.esm.models.GiftCertificate;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,7 +20,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@Component
 class GiftCertificateServiceImplTest {
 
     @InjectMocks
@@ -29,6 +33,10 @@ class GiftCertificateServiceImplTest {
     @Mock
     TagDao tagDao;
 
+    @BeforeEach
+    public void init(){
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     void findById() {
@@ -101,7 +109,7 @@ class GiftCertificateServiceImplTest {
                 .setDuration(4)
                 .build();
 
-        service.update(GiftCertificateRequest.toDto(testData, new ArrayList<>()), 1);
+        service.update(GiftCertificateUpdateRequest.toDto(testData, new ArrayList<>()), 1);
 
         Mockito.verify(dao).update(testData, new ArrayList<>());
     }
@@ -109,9 +117,9 @@ class GiftCertificateServiceImplTest {
     @Test
     void delete() {
 
-        service.delete(1);
+        service.delete(2);
 
-        Mockito.verify(dao).delete(1);
+        Mockito.verify(dao).delete(2);
 
     }
 }

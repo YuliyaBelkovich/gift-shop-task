@@ -4,7 +4,8 @@ import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.GiftCertificateRequest;
 import com.epam.esm.dto.GiftCertificateResponse;
-import com.epam.esm.exception.ExceptionManager;
+import com.epam.esm.dto.GiftCertificateUpdateRequest;
+import com.epam.esm.exception.ExceptionDefinition;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.models.GiftCertificate;
 import com.epam.esm.models.Tag;
@@ -31,7 +32,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     public GiftCertificateResponse findById(int id) {
         GiftCertificate giftCertificate =
-                giftCertificateCrudDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionManager.IDENTITY_NOT_FOUND));
+                giftCertificateCrudDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND));
         List<Tag> tagList = tagCrudDao.findByGiftId(id);
         return GiftCertificateResponse.toDto(giftCertificate, tagList);
     }
@@ -49,20 +50,20 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     public GiftCertificateResponse save(GiftCertificateRequest certificate) {
-        validateSave(certificate);
+//        validateSave(certificate);
         GiftCertificate giftCertificate = certificate.toIdentity(0);
         if (giftCertificateCrudDao.findByName(giftCertificate.getName()).isEmpty()) {
             giftCertificateCrudDao.add(giftCertificate,
                     certificate.getTags().stream().map(tag -> Tag.builder().setName(tag).build()).collect(Collectors.toList()));
         } else {
-            throw new ServiceException(ExceptionManager.IDENTITY_ALREADY_EXISTS);
+            throw new ServiceException(ExceptionDefinition.IDENTITY_ALREADY_EXISTS);
         }
         return findById(giftCertificate.getId());
     }
 
 
-    public void update(GiftCertificateRequest certificate, int id) {
-        validateUpdate(certificate);
+    public void update(GiftCertificateUpdateRequest certificate, int id) {
+//        validateUpdate(certificate);
         GiftCertificate giftCertificate = certificate.toIdentity(id);
         Optional.ofNullable(certificate.getTags()).ifPresentOrElse(tags ->
                 giftCertificateCrudDao.update(giftCertificate,

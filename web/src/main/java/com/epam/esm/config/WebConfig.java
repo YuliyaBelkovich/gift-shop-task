@@ -23,8 +23,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${ds.initPoolSize}")
     private int initPoolSize;
 
-
-
     @Bean(destroyMethod = "close")
     public BasicDataSource basicDataSource(){
         BasicDataSource basicDataSource = new BasicDataSource();
@@ -35,6 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
         basicDataSource.setInitialSize(initPoolSize);
         return basicDataSource;
     }
+
     @Bean
     public JdbcTemplate jdbcTemplate(){
         return new JdbcTemplate(basicDataSource());

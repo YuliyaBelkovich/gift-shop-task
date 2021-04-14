@@ -17,6 +17,7 @@ import static org.hamcrest.CoreMatchers.*;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = PersistenceTestConfig.class)
 class TagDaoImplTest {
+
     @Autowired
     private TagDao dao;
 

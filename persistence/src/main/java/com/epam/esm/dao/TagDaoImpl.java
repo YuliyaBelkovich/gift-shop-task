@@ -48,7 +48,7 @@ public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
 
     @Override
     public PreparedStatementCreator getCreatorForUpdate(Tag identity) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public List<Tag> findByGiftId(int id) {

@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 public class GiftCertificateUpdateRequest {
+
     @Size(min=2, max=30, message = "Name length should be between 2 and 30 symbols")
     private String name;
     @Size(min=2, max=30, message = "Name length should be between 2 and 30 symbols")

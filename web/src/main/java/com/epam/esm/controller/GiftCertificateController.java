@@ -28,14 +28,10 @@ public class GiftCertificateController {
 
     @GetMapping()
     public ResponseEntity<List<GiftCertificateResponse>> getAll(@RequestParam(required = false) Map<String, String> allParams) {
-        if (allParams.isEmpty()) {
-            return ResponseEntity.ok(service.findAll());
-        } else {
             return ResponseEntity.ok().body(service.findAll(allParams));
-        }
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<GiftCertificateResponse> getById(@PathVariable("id") int id) {
         return ResponseEntity.ok().body(service.findById(id));

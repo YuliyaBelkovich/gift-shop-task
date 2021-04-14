@@ -1,5 +1,7 @@
 package com.epam.esm.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.TagRequest;
 import com.epam.esm.dto.TagResponse;
@@ -10,18 +12,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class TagServiceImplTest {
 
     @InjectMocks
-    @Autowired
     TagServiceImpl service;
 
     @Mock
@@ -63,6 +61,8 @@ class TagServiceImplTest {
     @Test
     void save() {
         Tag testData = Tag.builder().setId(0).setName("test tag 4").build();
+
+        Mockito.when(tagDao.findById(testData.getId())).thenReturn(Optional.of(testData));
 
         service.save(TagRequest.toDto(testData));
 

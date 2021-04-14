@@ -5,18 +5,17 @@ import com.epam.esm.models.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.junit.MatcherAssert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = PersistenceTestConfig.class)
-@Component
 class TagDaoImplTest {
     @Autowired
     private TagDao dao;
@@ -27,9 +26,7 @@ class TagDaoImplTest {
 
         Tag actual = dao.findById(1).orElse(null);
 
-        assertNotNull(actual);
-        assertEquals(testData.getId(), actual.getId());
-        assertEquals(testData.getName(), actual.getName());
+        assertThat(testData, is(actual));
     }
 
     @Test
@@ -38,30 +35,23 @@ class TagDaoImplTest {
         Tag secondTag = Tag.builder().setId(2).setName("test tag 2").build();
         List<Tag> actual = dao.findAll();
 
-        assertNotNull(actual);
-        assertEquals(firstTag.getId(), actual.get(0).getId());
-        assertEquals(firstTag.getName(), actual.get(0).getName());
-
-        assertEquals(secondTag.getId(), actual.get(1).getId());
-        assertEquals(secondTag.getName(), actual.get(1).getName());
+        assertThat(firstTag, is(actual.get(0)));
+        assertThat(secondTag, is(actual.get(1)));
     }
 
     @Test
-    public void add(){
+    public void add() {
         Tag testData = Tag.builder().setId(4).setName("test tag 4").build();
 
         dao.add(testData);
 
         Tag actual = dao.findById(4).orElse(null);
 
-        assertNotNull(actual);
-
-        assertEquals(testData.getId(), actual.getId());
-        assertEquals(testData.getName(), actual.getName());
+        assertThat(testData, is(actual));
     }
 
     @Test
-    public void delete(){
+    public void delete() {
         dao.delete(3);
 
         Tag actual = dao.findById(3).orElse(null);

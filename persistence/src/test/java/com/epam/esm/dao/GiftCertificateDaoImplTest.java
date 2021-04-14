@@ -1,15 +1,17 @@
 package com.epam.esm.dao;
 
+import static org.hamcrest.junit.MatcherAssert.*;
+import static org.hamcrest.CoreMatchers.*;
+
 import com.epam.esm.dao.config.PersistenceTestConfig;
 import com.epam.esm.models.GiftCertificate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = PersistenceTestConfig.class)
-@Component
 class GiftCertificateDaoImplTest {
 
     @Autowired
@@ -31,16 +32,13 @@ class GiftCertificateDaoImplTest {
                 .setDescription("description 1")
                 .setPrice(1.0)
                 .setDuration(1)
+                .setCreateDate(LocalDateTime.of(2021, 1, 1, 0, 0, 1))
+                .setLastUpdateDate(LocalDateTime.of(2021, 1, 1, 0, 0, 1))
                 .build();
 
         GiftCertificate actual = dao.findById(1).get();
 
-        assertNotNull(actual);
-        assertEquals(testData.getId(), actual.getId());
-        assertEquals(testData.getName(), actual.getName());
-        assertEquals(testData.getDescription(), actual.getDescription());
-        assertEquals(testData.getPrice(), actual.getPrice());
-        assertEquals(testData.getDuration(), actual.getDuration());
+        assertThat(testData, is(actual));
     }
 
 
@@ -57,6 +55,8 @@ class GiftCertificateDaoImplTest {
                 .setDescription("description 1")
                 .setPrice(1.0)
                 .setDuration(1)
+                .setCreateDate(LocalDateTime.of(2021, 1, 1, 0, 0, 1))
+                .setLastUpdateDate(LocalDateTime.of(2021, 1, 1, 0, 0, 1))
                 .build();
 
         GiftCertificate gc2 = GiftCertificate.builder().setId(3)
@@ -64,24 +64,15 @@ class GiftCertificateDaoImplTest {
                 .setDescription("description 3")
                 .setPrice(3.0)
                 .setDuration(3)
+                .setCreateDate(LocalDateTime.of(2021, 1, 1, 0, 0, 1))
+                .setLastUpdateDate(LocalDateTime.of(2021, 1, 1, 0, 0, 1))
                 .build();
 
         List<GiftCertificate> actual = dao.findWithParams(params);
 
-        assertNotNull(actual);
-        assertEquals(2, actual.size());
-
-        assertEquals(gc2.getId(), actual.get(0).getId());
-        assertEquals(gc2.getName(), actual.get(0).getName());
-        assertEquals(gc2.getDescription(), actual.get(0).getDescription());
-        assertEquals(gc2.getPrice(), actual.get(0).getPrice());
-        assertEquals(gc2.getDuration(), actual.get(0).getDuration());
-
-        assertEquals(gc1.getId(), actual.get(1).getId());
-        assertEquals(gc1.getName(), actual.get(1).getName());
-        assertEquals(gc1.getDescription(), actual.get(1).getDescription());
-        assertEquals(gc1.getPrice(), actual.get(1).getPrice());
-        assertEquals(gc1.getDuration(), actual.get(1).getDuration());
+        assertThat(2, is(equalTo(actual.size())));
+        assertThat(gc2, is(actual.get(0)));
+        assertThat(gc1, is(actual.get(1)));
     }
 
 
@@ -111,9 +102,7 @@ class GiftCertificateDaoImplTest {
     void update() {
         GiftCertificate testData = GiftCertificate.builder().setId(5)
                 .setName("test 7")
-                .setDescription("description 7")
                 .setPrice(7.0)
-                .setDuration(2)
                 .build();
 
         dao.update(testData);
@@ -124,10 +113,7 @@ class GiftCertificateDaoImplTest {
 
         assertEquals(testData.getId(), actual.getId());
         assertEquals(testData.getName(), actual.getName());
-        assertEquals(testData.getDescription(), actual.getDescription());
         assertEquals(testData.getPrice(), actual.getPrice());
-        assertEquals(testData.getDuration(), actual.getDuration());
-
     }
 
     @Test

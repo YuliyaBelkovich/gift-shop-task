@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class GiftCertificate implements Identifiable {
+
     private int id;
     private String name;
     private String description;

@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class GiftCertificateResponse {
+
     private int id;
     private String name;
     private String description;

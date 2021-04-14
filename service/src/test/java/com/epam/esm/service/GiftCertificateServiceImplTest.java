@@ -1,30 +1,26 @@
 package com.epam.esm.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.epam.esm.dao.GiftCertificateDaoImpl;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.GiftCertificateRequest;
 import com.epam.esm.dto.GiftCertificateResponse;
 import com.epam.esm.dto.GiftCertificateUpdateRequest;
 import com.epam.esm.models.GiftCertificate;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-@Component
 class GiftCertificateServiceImplTest {
 
     @InjectMocks
-    @Autowired
     GiftCertificateServiceImpl service;
 
     @Mock
@@ -34,8 +30,33 @@ class GiftCertificateServiceImplTest {
     TagDao tagDao;
 
     @BeforeEach
-    public void init(){
+    public void init() {
         MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void findAll() {
+        GiftCertificate testData = GiftCertificate.builder().setId(1)
+                .setName("test 4")
+                .setDescription("description 4")
+                .setPrice(4.0)
+                .setDuration(4)
+                .setCreateDate(LocalDateTime.now())
+                .setLastUpdateDate(LocalDateTime.now())
+                .build();
+        List<GiftCertificate> testDataList = new ArrayList<>();
+        testDataList.add(testData);
+
+        List<GiftCertificateResponse> expected = new ArrayList<>();
+        expected.add(GiftCertificateResponse.toDto(testData, new ArrayList<>()));
+
+        Mockito.when(dao.findAll()).thenReturn(testDataList);
+        Mockito.when(tagDao.findByGiftId(1)).thenReturn(new ArrayList<>());
+
+        List<GiftCertificateResponse> actual = service.findAll(new HashMap<>());
+
+        assertEquals(expected, actual);
+
     }
 
     @Test
@@ -61,31 +82,6 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    void findAll() {
-        GiftCertificate testData = GiftCertificate.builder().setId(1)
-                .setName("test 4")
-                .setDescription("description 4")
-                .setPrice(4.0)
-                .setDuration(4)
-                .setCreateDate(LocalDateTime.now())
-                .setLastUpdateDate(LocalDateTime.now())
-                .build();
-        List<GiftCertificate> testDataList = new ArrayList<>();
-        testDataList.add(testData);
-
-        List<GiftCertificateResponse> expected = new ArrayList<>();
-        expected.add(GiftCertificateResponse.toDto(testData, new ArrayList<>()));
-
-        Mockito.when(dao.findAll()).thenReturn(testDataList);
-        Mockito.when(tagDao.findByGiftId(1)).thenReturn(new ArrayList<>());
-
-       List<GiftCertificateResponse> actual = service.findAll();
-
-        assertEquals(expected, actual);
-
-    }
-
-    @Test
     void save() {
         GiftCertificate testData = GiftCertificate.builder().setId(0)
                 .setName("test 4")
@@ -93,6 +89,8 @@ class GiftCertificateServiceImplTest {
                 .setPrice(4.0)
                 .setDuration(4)
                 .build();
+
+        Mockito.when(dao.findById(testData.getId())).thenReturn(Optional.of(testData));
 
         service.save(GiftCertificateRequest.toDto(testData, new ArrayList<>()));
 

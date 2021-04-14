@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface GiftCertificateService {
-    List<GiftCertificateResponse> findAll();
 
     GiftCertificateResponse save(GiftCertificateRequest certificate);
 

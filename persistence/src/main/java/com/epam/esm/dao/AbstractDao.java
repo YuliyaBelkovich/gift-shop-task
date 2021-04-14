@@ -23,21 +23,21 @@ public abstract class AbstractDao<T extends Identifiable> implements CrudDao<T> 
         this.template = template;
     }
 
-    public void executeUpdate(String sql, Object... args) {
+    protected void executeUpdate(String sql, Object... args) {
         template.update(sql, args);
     }
 
-    public List<T> executeQuery(String sql, RowMapper<T> rowMapper, Object... args) {
+    protected List<T> executeQuery(String sql, RowMapper<T> rowMapper, Object... args) {
         return template.query(sql, rowMapper, args);
     }
 
-    public abstract String getTableName();
+    protected abstract String getTableName();
 
-    public abstract RowMapper<T> getRowMapper();
+    protected abstract RowMapper<T> getRowMapper();
 
-    public abstract PreparedStatementCreator getCreatorForAdd(T identity);
+    protected abstract PreparedStatementCreator getCreatorForAdd(T identity);
 
-    public abstract PreparedStatementCreator getCreatorForUpdate(T identity);
+    protected abstract PreparedStatementCreator getCreatorForUpdate(T identity);
 
     @Override
     public List<T> findAll() {

@@ -3,6 +3,7 @@ package com.epam.esm.models;
 import java.util.Objects;
 
 public class Tag implements Identifiable {
+
     private int id;
     private String name;
 

@@ -5,6 +5,7 @@ import com.epam.esm.models.Tag;
 import java.util.Objects;
 
 public class TagResponse {
+
     private int id;
     private String name;
 

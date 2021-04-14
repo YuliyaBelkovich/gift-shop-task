@@ -1,48 +1,65 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.exception.ExceptionDefinition;
 import com.epam.esm.exception.ServiceException;
+import org.springframework.beans.TypeMismatchException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
-
-    @ExceptionHandler(ServiceException.class)
-    public final ResponseEntity<GiftShopErrorResponse> handleServiceException(ServiceException e) {
-        List<String> messages = new ArrayList<>();
-        messages.add(e.getMessage());
-        return ResponseEntity
-                .status(e.getExceptionManager().getStatus())
-                .body(new GiftShopErrorResponse(e.getExceptionManager().getErrorCode(), messages));
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
+                                                                         HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return createErrorResponse(ExceptionDefinition.METHOD_NOT_SUPPORTED);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public final ResponseEntity<GiftShopErrorResponse> handleValidationException(MethodArgumentNotValidException e) {
+    @Override
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex,
+                                                        HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return createErrorResponse(ExceptionDefinition.MISSING_PATH_VARIABLE);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
         List<String> messages = new ArrayList<>();
-        for (ObjectError error : e.getBindingResult().getAllErrors()) {
+        for (ObjectError error : ex.getBindingResult().getAllErrors()) {
             messages.add(error.getDefaultMessage());
         }
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new GiftShopErrorResponse(40001, messages));
-
     }
 
-    @ExceptionHandler(Exception.class)
-    public final ResponseEntity<GiftShopErrorResponse> handleException(Exception e) {
-        List<String> messages = new ArrayList<>();
-        messages.add("Exception on the server side occurred. Please try later");
+    @ExceptionHandler(ServiceException.class)
+    public final ResponseEntity<Object> handleServiceException(ServiceException e) {
+        return createErrorResponse(e.getExceptionDefinition());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
+                                                             HttpStatus status, WebRequest request) {
+        return createErrorResponse(ExceptionDefinition.INTERNAL_SERVER_ERROR);
+    }
+
+    private ResponseEntity<Object> createErrorResponse(ExceptionDefinition exceptionDefinition) {
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new GiftShopErrorResponse(500, messages));
+                .status(exceptionDefinition.getStatus())
+                .body(new GiftShopErrorResponse(exceptionDefinition.getErrorCode(),
+                        Arrays.asList(exceptionDefinition.getMessages())));
     }
-
 }

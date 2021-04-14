@@ -8,6 +8,7 @@ import java.util.Optional;
 
 @Component
 public interface CrudDao<T extends Identifiable> {
+
     List<T> findAll();
 
     Optional<T> findById(int id);

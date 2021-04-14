@@ -19,8 +19,6 @@ dependencies {
     testImplementation "com.h2database:h2:${h2databaseVersion}"
     testImplementation "org.hamcrest:hamcrest-junit:${hamcrestVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springTestVersion}"
-
-
 }
 
 test {

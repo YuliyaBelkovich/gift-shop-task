@@ -26,18 +26,18 @@ class TagServiceImplTest {
     TagDao tagDao;
 
     @BeforeEach
-    public void init(){
+    public void init() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
     void findAll() {
         Tag firstTag = Tag.builder().setId(1).setName("test tag 1").build();
-       List<Tag> tagList =  new ArrayList<>();
-       tagList.add(firstTag);
+        List<Tag> tagList = new ArrayList<>();
+        tagList.add(firstTag);
 
-       List<TagResponse> expected = new ArrayList<>();
-       expected.add(TagResponse.toDto(firstTag));
+        List<TagResponse> expected = new ArrayList<>();
+        expected.add(TagResponse.toDto(firstTag));
 
         Mockito.when(tagDao.findAll()).thenReturn(tagList);
 

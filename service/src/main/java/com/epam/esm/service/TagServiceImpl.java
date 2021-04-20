@@ -43,6 +43,7 @@ public class TagServiceImpl implements TagService {
     }
 
     public void delete(int id) {
+        tagDao.findById(id).orElseThrow(()-> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND));
         tagDao.delete(id);
     }
 }

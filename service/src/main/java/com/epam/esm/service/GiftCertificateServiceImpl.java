@@ -37,7 +37,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     public List<GiftCertificateResponse> findAll(Map<String, String> params) {
-        if(params.isEmpty()){
+        if (params.isEmpty()) {
             return giftCertificateCrudDao.findAll().stream()
                     .map(giftCertificate -> GiftCertificateResponse.toDto(giftCertificate,
                             tagCrudDao.findByGiftId(giftCertificate.getId()))).collect(Collectors.toList());

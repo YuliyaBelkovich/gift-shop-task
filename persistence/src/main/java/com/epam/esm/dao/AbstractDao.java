@@ -1,12 +1,14 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.models.Identifiable;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import java.sql.SQLException;
 import java.util.*;
 
 
@@ -40,16 +42,16 @@ public abstract class AbstractDao<T extends Identifiable> implements CrudDao<T> 
     protected abstract PreparedStatementCreator getCreatorForUpdate(T identity);
 
     @Override
-    public List<T> findAll() {
+    public List<T> findAll() throws BadSqlGrammarException {
         return template.query(String.format(FIND_ALL_QUERY, getTableName()), getRowMapper());
     }
 
     @Override
-    public Optional<T> findById(int id) {
-        return template.query(String.format(FIND_BY_ID_QUERY, getTableName()), getRowMapper(), id).stream().findAny();
+    public Optional<T> findById(int id) throws BadSqlGrammarException {
+            return template.query(String.format(FIND_BY_ID_QUERY, getTableName()), getRowMapper(), id).stream().findAny();
     }
 
-    public Optional<T> findByName(String name) {
+    public Optional<T> findByName(String name)  {
         return template.query(String.format(FIND_BY_NAME, getTableName()), getRowMapper(), name).stream().findAny();
     }
 

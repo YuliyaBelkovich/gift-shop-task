@@ -1,11 +1,12 @@
-package com.epam.esm.service;
+package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dto.TagRequest;
-import com.epam.esm.dto.TagResponse;
+import com.epam.esm.dto.request.TagRequest;
+import com.epam.esm.dto.response.TagResponse;
 import com.epam.esm.exception.ExceptionDefinition;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.models.Tag;
+import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +29,7 @@ public class TagServiceImpl implements TagService {
     }
 
     public TagResponse findById(int id) {
-        return TagResponse.toDto(Objects.requireNonNull(tagDao.findById(id)
-                .orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND))));
+        return TagResponse.toDto(tagDao.findById(id).orElseThrow(()-> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
     }
 
     public TagResponse save(TagRequest tag) {

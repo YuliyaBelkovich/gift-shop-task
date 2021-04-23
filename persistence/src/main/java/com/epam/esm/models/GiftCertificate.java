@@ -1,22 +1,64 @@
 package com.epam.esm.models;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+@Entity(name = "GiftCertificate")
+@Table(name = "gift_certificate")
+@DynamicInsert
+@DynamicUpdate
 public class GiftCertificate implements Identifiable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "gift_certificate_id")
     private int id;
+
+    @Column(unique = true, nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String description;
+
+    @Column(nullable = false)
     private double price;
+
+    @Column(nullable = false)
     private int duration;
+
+    @Column(name = "create_date", columnDefinition = "timestamp not null default CURRENT_TIMESTAMP")
     private LocalDateTime createDate;
+
+    @Column(name = "last_update_date", columnDefinition = "timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
     private LocalDateTime lastUpdateDate;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "gift_certificate_tag",
+            joinColumns = {@JoinColumn(name = "gift_certificate_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id")})
+    private Set<Tag> tags;
+
+    @ManyToMany(mappedBy = "certificates")
+    private List<Order> orders;
 
     private GiftCertificate() {
     }
 
-    private GiftCertificate(int id, String name, String description, double price, int duration, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    private GiftCertificate(int id, String name, String description, double price, int duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<Tag> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -24,6 +66,17 @@ public class GiftCertificate implements Identifiable {
         this.duration = duration;
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
+        this.tags = tags;
+    }
+
+    public void addTag(Tag tag) {
+        tags.add(tag);
+        tag.getGiftCertificates().add(this);
+    }
+
+    public void removeTag(Tag tag) {
+        tags.remove(tag);
+        tag.getGiftCertificates().remove(this);
     }
 
     public int getId() {
@@ -127,6 +180,7 @@ public class GiftCertificate implements Identifiable {
         private int duration;
         private LocalDateTime createDate;
         private LocalDateTime lastUpdateDate;
+        private Set<Tag> tags;
 
         public Builder setId(int id) {
             this.id = id;
@@ -163,8 +217,13 @@ public class GiftCertificate implements Identifiable {
             return this;
         }
 
+        public Builder setTags(Set<Tag> tags) {
+            this.tags = tags;
+            return this;
+        }
+
         public GiftCertificate build() {
-            return new GiftCertificate(id, name, description, price, duration, createDate, lastUpdateDate);
+            return new GiftCertificate(id, name, description, price, duration, createDate, lastUpdateDate, tags);
         }
     }
 }

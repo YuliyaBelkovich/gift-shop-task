@@ -5,13 +5,19 @@ import com.epam.esm.models.Tag;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-public interface GiftCertificateDao extends CrudDao<GiftCertificate> {
+public interface GiftCertificateDao {
 
-    void add(GiftCertificate certificate, List<Tag> tags);
+    List<GiftCertificate> findAll();
 
-    void update(GiftCertificate certificate, List<Tag> tags);
+    Optional<GiftCertificate> findById(int id);
 
-    List<GiftCertificate> findWithParams(Map<String, String> params);
+    GiftCertificate add(GiftCertificate certificate);
+
+    void update(GiftCertificate certificate);
+
+    void delete(int id);
+
 
 }

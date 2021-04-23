@@ -1,10 +1,13 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.GiftCertificateRequest;
-import com.epam.esm.dto.GiftCertificateResponse;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
-import com.epam.esm.dto.GiftCertificateUpdateRequest;
+import com.epam.esm.dto.request.GiftCertificateRequest;
+import com.epam.esm.dto.response.GiftCertificateResponse;
+
+import com.epam.esm.dto.request.GiftCertificateUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import com.epam.esm.service.GiftCertificateService;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/certificates", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -27,19 +30,20 @@ public class GiftCertificateController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<GiftCertificateResponse>> getAll(@RequestParam(required = false) Map<String, String> allParams) {
-            return ResponseEntity.ok().body(service.findAll(allParams));
+    public CollectionModel<GiftCertificateResponse> getAll(@RequestParam(required = false) Map<String, String> allParams) {
+        return CollectionModel.of(service.findAll(allParams).stream()
+                .peek(response -> response.add(linkTo(GiftCertificateController.class).slash(response.getId()).withSelfRel())).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
-    @ResponseBody
     public ResponseEntity<GiftCertificateResponse> getById(@PathVariable("id") int id) {
-        return ResponseEntity.ok().body(service.findById(id));
+        return ResponseEntity.status(HttpStatus.OK).body(service.findById(id).add(linkTo(GiftCertificateController.class).slash(id).withSelfRel()));
     }
 
     @PostMapping
     public ResponseEntity<GiftCertificateResponse> createCertificate(@RequestBody @Valid GiftCertificateRequest certificate) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(certificate));
+        GiftCertificateResponse response = service.save(certificate);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response.add(linkTo(GiftCertificateController.class).slash(response.getId()).withSelfRel()));
     }
 
     @PatchMapping("/{id}")

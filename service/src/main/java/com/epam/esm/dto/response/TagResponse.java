@@ -1,10 +1,11 @@
-package com.epam.esm.dto;
+package com.epam.esm.dto.response;
 
 import com.epam.esm.models.Tag;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Objects;
 
-public class TagResponse {
+public class TagResponse extends RepresentationModel<TagResponse> {
 
     private int id;
     private String name;

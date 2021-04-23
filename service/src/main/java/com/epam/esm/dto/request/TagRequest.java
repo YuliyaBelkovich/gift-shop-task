@@ -1,4 +1,4 @@
-package com.epam.esm.dto;
+package com.epam.esm.dto.request;
 
 import com.epam.esm.models.Tag;
 

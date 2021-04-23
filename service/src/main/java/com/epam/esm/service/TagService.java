@@ -1,7 +1,7 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dto.TagRequest;
-import com.epam.esm.dto.TagResponse;
+import com.epam.esm.dto.request.TagRequest;
+import com.epam.esm.dto.response.TagResponse;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ public interface TagService {
     TagResponse findById(int id);
 
     TagResponse save(TagRequest tag);
+
 
     void delete(int id);
 

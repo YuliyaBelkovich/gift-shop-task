@@ -1,22 +1,24 @@
-package com.epam.esm.dto;
+package com.epam.esm.dto.response;
 
 import com.epam.esm.models.GiftCertificate;
 import com.epam.esm.models.Tag;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class GiftCertificateResponse {
+public class GiftCertificateResponse extends RepresentationModel<GiftCertificateResponse> {
 
     private int id;
     private String name;
     private String description;
     private double price;
     private int duration;
-    private List<String> tags;
+    private Set<String> tags;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createDate;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
@@ -25,7 +27,7 @@ public class GiftCertificateResponse {
     private GiftCertificateResponse() {
     }
 
-    private GiftCertificateResponse(int id, String name, String description, double price, int duration, List<String> tags, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
+    private GiftCertificateResponse(int id, String name, String description, double price, int duration, Set<String> tags, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -92,11 +94,11 @@ public class GiftCertificateResponse {
         this.duration = duration;
     }
 
-    public List<String> getTags() {
+    public Set<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(Set<String> tags) {
         this.tags = tags;
     }
 
@@ -123,7 +125,7 @@ public class GiftCertificateResponse {
         return Objects.hash(getId(), getName(), getDescription(), getPrice(), getDuration(), getTags(), getCreateDate(), getLastUpdateDate());
     }
 
-    public static GiftCertificateResponse toDto(GiftCertificate certificate, List<Tag> tags) {
+    public static GiftCertificateResponse toDto(GiftCertificate certificate) {
 
         return new GiftCertificateResponse.Builder()
                 .setId(certificate.getId())
@@ -133,7 +135,7 @@ public class GiftCertificateResponse {
                 .setDuration(certificate.getDuration())
                 .setLastUpdateDate(certificate.getLastUpdateDate())
                 .setCreateDate(certificate.getCreateDate())
-                .setTags(tags)
+                .setTags(certificate.getTags())
                 .build();
 
     }
@@ -144,7 +146,7 @@ public class GiftCertificateResponse {
         private String description;
         private double price;
         private int duration;
-        private List<String> tags;
+        private Set<String> tags;
         private LocalDateTime createDate;
         private LocalDateTime lastUpdateDate;
 
@@ -173,8 +175,8 @@ public class GiftCertificateResponse {
             return this;
         }
 
-        public Builder setTags(List<Tag> tags) {
-            this.tags = tags.stream().map(Tag::getName).collect(Collectors.toList());
+        public Builder setTags(Set<Tag> tags) {
+            this.tags = tags.stream().map(Tag::getName).collect(Collectors.toSet());
             return this;
         }
 

@@ -1,18 +1,40 @@
 package com.epam.esm.models;
 
+import org.hibernate.annotations.SelectBeforeUpdate;
+
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 
-public class Tag implements Identifiable {
-
+@Entity(name="Tag")
+@SelectBeforeUpdate
+public class Tag implements Identifiable, Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="tag_id")
     private int id;
+    @Column(unique = true, nullable = false)
     private String name;
+
+    @ManyToMany(mappedBy = "tags")
+    private Set<GiftCertificate> giftCertificates;
 
     private Tag() {
     }
 
-    private Tag(int id, String name) {
+    public Set<GiftCertificate> getGiftCertificates() {
+        return giftCertificates;
+    }
+
+    public void setGiftCertificates(Set<GiftCertificate> giftCertificates) {
+        this.giftCertificates = giftCertificates;
+    }
+
+    public Tag(int id, String name, Set<GiftCertificate> giftCertificates) {
         this.id = id;
         this.name = name;
+        this.giftCertificates = giftCertificates;
     }
 
     @Override
@@ -30,6 +52,15 @@ public class Tag implements Identifiable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", giftCertificates=" + giftCertificates +
+                '}';
     }
 
     @Override
@@ -56,6 +87,7 @@ public class Tag implements Identifiable {
     public static class Builder {
         private int id;
         private String name;
+        private Set<GiftCertificate> giftCertificates;
 
 
         public Builder setId(int id) {
@@ -68,8 +100,13 @@ public class Tag implements Identifiable {
             return this;
         }
 
+        public Builder setGiftCertificates(Set<GiftCertificate> giftCertificates) {
+            this.giftCertificates = giftCertificates;
+            return this;
+        }
+
         public Tag build() {
-            return new Tag(id, name);
+            return new Tag(id, name, giftCertificates);
         }
     }
 }

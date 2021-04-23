@@ -1,58 +1,65 @@
 package com.epam.esm.dao;
 
+import com.epam.esm.models.GiftCertificate;
 import com.epam.esm.models.Tag;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class TagDaoImpl extends AbstractDao<Tag> implements TagDao {
+public class TagDaoImpl implements TagDao {
 
-    private static final String TABLE_NAME = "tag";
-
-    private static final String ADD_QUERY = "INSERT INTO tag (name) VALUES(?)";
-    private static final String FIND_TAG_BY_GIFT_ID_QUERY = "SELECT * FROM tag JOIN tag_certificate ON tag.id = tag_certificate.tag_id WHERE gift_certificate_id = ?";
+    private SessionFactory sessionFactory;
+    private EntityManagerFactory entityManagerFactory;
 
     @Autowired
-    public TagDaoImpl(JdbcTemplate template) {
-        super(template);
+    public TagDaoImpl(EntityManagerFactory factory) {
+        this.entityManagerFactory = factory;
     }
 
     @Override
-    public String getTableName() {
-        return TABLE_NAME;
+    public List<Tag> findAll() {
+        return sessionFactory.openSession().createQuery("SELECT a FROM Tag a", Tag.class).list();
     }
 
     @Override
-    public PreparedStatementCreator getCreatorForAdd(Tag identity) {
-        return con -> {
-            PreparedStatement ps = con.prepareStatement(ADD_QUERY,
-                    PreparedStatement.RETURN_GENERATED_KEYS);
-            ps.setString(1, identity.getName());
-            return ps;
-        };
+    public Optional<Tag> findById(int id) {
+        return Optional.of(sessionFactory.openSession().get(Tag.class, id));
     }
 
     @Override
-    public RowMapper<Tag> getRowMapper() {
-        return (rs, rowNum) -> Tag.builder()
-                .setId(rs.getInt("id"))
-                .setName(rs.getString("name"))
-                .build();
+    public Optional<Tag> findByName(String name) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        return Optional.of(em.createQuery("FROM Tag WHERE name = '" + name + "'", Tag.class).getSingleResult());
     }
 
     @Override
-    public PreparedStatementCreator getCreatorForUpdate(Tag identity) {
-        throw new UnsupportedOperationException();
+    public Tag add(Tag tag) {
+        sessionFactory.openSession().save(tag);
+        return findById(tag.getId()).get();
     }
 
+    @Override
+    public void update(Tag identity) {
+
+    }
+
+    @Override
+    public void delete(int id) {
+
+    }
+
+    @Override
     public List<Tag> findByGiftId(int id) {
-        return executeQuery(FIND_TAG_BY_GIFT_ID_QUERY, getRowMapper(), id);
+        return null;
     }
-
 }

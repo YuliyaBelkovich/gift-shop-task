@@ -1,7 +1,7 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.TagRequest;
-import com.epam.esm.dto.TagResponse;
+import com.epam.esm.dto.request.TagRequest;
+import com.epam.esm.dto.response.TagResponse;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +32,11 @@ public class TagController {
     @GetMapping("/{id}")
     public ResponseEntity<TagResponse> findById(@PathVariable("id") int id) {
         return ResponseEntity.ok(service.findById(id));
+    }
+
+    @GetMapping("/top")
+    public ResponseEntity<TagResponse> getMostPopularTag(){
+        return null;
     }
 
     @PostMapping

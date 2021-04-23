@@ -15,7 +15,7 @@ public interface CrudDao<T extends Identifiable> {
 
     Optional<T> findByName(String name);
 
-    void add(T identity);
+    T add(T identity);
 
     void update(T identity);
 

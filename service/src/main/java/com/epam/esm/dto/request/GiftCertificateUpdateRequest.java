@@ -1,31 +1,28 @@
-package com.epam.esm.dto;
+package com.epam.esm.dto.request;
 
 import com.epam.esm.models.GiftCertificate;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-public class GiftCertificateRequest {
+public class GiftCertificateUpdateRequest {
 
-    @NotNull(message = "Please, provide a name")
-    @Size(min = 2, max = 30, message = "Name length should be between 2 and 30 symbols")
+    @Size(min=2, max=30, message = "Name length should be between 2 and 30 symbols")
     private String name;
-    @NotNull(message = "Please, provide a name")
-    @Size(min = 2, max = 30, message = "Name length should be between 2 and 30 symbols")
+    @Size(min=2, max=1000, message = "Description length should be between 2 and 30 symbols")
     private String description;
-    @DecimalMin(value = "0.01", message = "Price can't be less than 0.01$")
+    @DecimalMin(value = "0", message = "Price can't be less than 0.01$")
     private double price;
-    @Min(value = 1, message = "Duration can't be less than 1 day")
+    @Min(value = 0, message = "Duration can't be less than 1 day")
     private int duration;
     private List<String> tags;
 
-    public GiftCertificateRequest() {
+    public GiftCertificateUpdateRequest() {
     }
 
-    public GiftCertificateRequest(String name, String description, double price, int duration, List<String> tags) {
+    public GiftCertificateUpdateRequest(String name, String description, double price, int duration, List<String> tags) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -84,8 +81,8 @@ public class GiftCertificateRequest {
                 .build();
     }
 
-    public static GiftCertificateRequest toDto(GiftCertificate giftCertificate, List<String> tags) {
-        return new GiftCertificateRequest(giftCertificate.getName(), giftCertificate.getDescription(),
+    public static GiftCertificateUpdateRequest toDto(GiftCertificate giftCertificate, List<String> tags) {
+        return new GiftCertificateUpdateRequest(giftCertificate.getName(), giftCertificate.getDescription(),
                 giftCertificate.getPrice(), giftCertificate.getDuration(), tags);
     }
 }

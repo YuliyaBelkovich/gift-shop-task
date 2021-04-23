@@ -41,39 +41,39 @@ class GiftCertificateDaoImplTest {
         assertThat(testData, is(actual));
     }
 
-
-    @Test
-    void findWithParams() {
-        Map<String, String> params = new HashMap<>();
-        params.put("tag_name", "test tag 1");
-        params.put("name", "test");
-        params.put("sort_by", "name");
-        params.put("order", "DESC");
-
-        GiftCertificate gc1 = GiftCertificate.builder().setId(1)
-                .setName("test 1")
-                .setDescription("description 1")
-                .setPrice(1.0)
-                .setDuration(1)
-                .setCreateDate(LocalDateTime.of(2021, 1, 1, 0, 0, 1))
-                .setLastUpdateDate(LocalDateTime.of(2021, 1, 1, 0, 0, 1))
-                .build();
-
-        GiftCertificate gc2 = GiftCertificate.builder().setId(3)
-                .setName("test 3")
-                .setDescription("description 3")
-                .setPrice(3.0)
-                .setDuration(3)
-                .setCreateDate(LocalDateTime.of(2021, 1, 1, 0, 0, 1))
-                .setLastUpdateDate(LocalDateTime.of(2021, 1, 1, 0, 0, 1))
-                .build();
-
-        List<GiftCertificate> actual = dao.findWithParams(params);
-
-        assertThat(2, is(equalTo(actual.size())));
-        assertThat(gc2, is(actual.get(0)));
-        assertThat(gc1, is(actual.get(1)));
-    }
+//
+//    @Test
+//    void findWithParams() {
+//        Map<String, String> params = new HashMap<>();
+//        params.put("tag_name", "test tag 1");
+//        params.put("name", "test");
+//        params.put("sort_by", "name");
+//        params.put("order", "DESC");
+//
+//        GiftCertificate gc1 = GiftCertificate.builder().setId(1)
+//                .setName("test 1")
+//                .setDescription("description 1")
+//                .setPrice(1.0)
+//                .setDuration(1)
+//                .setCreateDate(LocalDateTime.of(2021, 1, 1, 0, 0, 1))
+//                .setLastUpdateDate(LocalDateTime.of(2021, 1, 1, 0, 0, 1))
+//                .build();
+//
+//        GiftCertificate gc2 = GiftCertificate.builder().setId(3)
+//                .setName("test 3")
+//                .setDescription("description 3")
+//                .setPrice(3.0)
+//                .setDuration(3)
+//                .setCreateDate(LocalDateTime.of(2021, 1, 1, 0, 0, 1))
+//                .setLastUpdateDate(LocalDateTime.of(2021, 1, 1, 0, 0, 1))
+//                .build();
+//
+//        List<GiftCertificate> actual = dao.findWithParams(params);
+//
+//        assertThat(2, is(equalTo(actual.size())));
+//        assertThat(gc2, is(actual.get(0)));
+//        assertThat(gc1, is(actual.get(1)));
+//    }
 
 
     @Test
@@ -116,12 +116,12 @@ class GiftCertificateDaoImplTest {
         assertEquals(testData.getPrice(), actual.getPrice());
     }
 
-    @Test
-    void delete() {
-        dao.delete(4);
-
-        GiftCertificate actual = dao.findById(4).orElse(null);
-
-        assertNull(actual);
-    }
+//    @Test
+//    void delete() {
+//        dao.delete(4);
+//
+//        GiftCertificate actual = dao.findById(4).orElse(null);
+//
+//        assertNull(actual);
+//    }
 }

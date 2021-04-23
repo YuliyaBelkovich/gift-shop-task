@@ -25,16 +25,25 @@ subprojects {
         implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
         implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
-        implementation "org.springframework:spring-context:${springVersion}"
-        implementation "org.springframework:spring-core:${springVersion}"
-        implementation "org.springframework:spring-beans:${springVersion}"
-        implementation "org.springframework:spring-webmvc:${springVersion}"
         implementation "org.glassfish:javax.el:${glassfishVersion}"
         implementation "javax.el:javax.el-api:${javaxElVersion}"
         implementation "javax.validation:validation-api:${javaxValidationVersion}"
         implementation "org.hibernate.validator:hibernate-validator:${hibernateVersion}"
 
+        implementation "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
+        implementation "org.springframework.boot:spring-boot-autoconfigure:${springBootVersion}"
+        implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+        implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
+        implementation "org.springframework.boot:spring-boot-starter-hateoas:${springBootVersion}"
+
+        implementation 'org.hibernate:hibernate-core:5.4.2.Final'
+        implementation 'org.springframework:spring-orm:5.3.6'
+
+        implementation 'org.apache.tomcat:tomcat-jdbc:10.0.5'
+
         testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+        testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+
 
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     }

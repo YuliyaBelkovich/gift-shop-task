@@ -3,9 +3,10 @@ package com.epam.esm.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dto.TagRequest;
-import com.epam.esm.dto.TagResponse;
+import com.epam.esm.dto.request.TagRequest;
+import com.epam.esm.dto.response.TagResponse;
 import com.epam.esm.models.Tag;
+import com.epam.esm.service.impl.TagServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

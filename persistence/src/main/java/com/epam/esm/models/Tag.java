@@ -12,7 +12,6 @@ import java.util.Set;
 public class Tag implements Identifiable, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="tag_id")
     private int id;
     @Column(unique = true, nullable = false)
     private String name;

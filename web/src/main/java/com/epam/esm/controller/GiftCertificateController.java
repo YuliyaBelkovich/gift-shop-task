@@ -52,7 +52,6 @@ public class GiftCertificateController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") int id) {
         service.delete(id);

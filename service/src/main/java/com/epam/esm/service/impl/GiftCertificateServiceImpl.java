@@ -2,7 +2,6 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dao.TagDaoImpl;
 import com.epam.esm.dto.request.GiftCertificateRequest;
 import com.epam.esm.dto.response.GiftCertificateResponse;
 import com.epam.esm.dto.request.GiftCertificateUpdateRequest;
@@ -13,51 +12,84 @@ import com.epam.esm.models.Tag;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
+@Transactional
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
-    private GiftCertificateDao giftCertificateCrudDao;
-    private TagDao tagDao;
+    private final GiftCertificateDao giftCertificateDao;
+    private final TagDao tagDao;
 
     @Autowired
     public GiftCertificateServiceImpl(GiftCertificateDao giftCertificateCrudDao, TagDao tagDao) {
-        this.giftCertificateCrudDao = giftCertificateCrudDao;
+        this.giftCertificateDao = giftCertificateCrudDao;
         this.tagDao = tagDao;
     }
 
     public GiftCertificateResponse findById(int id) {
         GiftCertificate giftCertificate =
-                giftCertificateCrudDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND));
+                giftCertificateDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND));
         return GiftCertificateResponse.toDto(giftCertificate);
     }
 
     public List<GiftCertificateResponse> findAll(Map<String, String> params) {
-        return giftCertificateCrudDao.findAll().stream().map(GiftCertificateResponse::toDto).collect(Collectors.toList());
+        return giftCertificateDao.findAll(params).stream().map(GiftCertificateResponse::toDto).collect(Collectors.toList());
     }
 
     public GiftCertificateResponse save(GiftCertificateRequest certificate) {
-        GiftCertificate giftCertificate = certificate.toIdentity();
-        Set<Tag> tagSet = giftCertificate.getTags();
-        tagSet.forEach(tag ->{
-            tagSet.remove(tag);
-            tagSet.add(tagDao.findByName(tag.getName()).orElse(tag));
+        tagDao.findByName(certificate.getName()).ifPresent(gift -> {
+            throw new ServiceException(ExceptionDefinition.IDENTITY_ALREADY_EXISTS);
         });
-        System.out.println(tagSet.toArray()[0]);
-        return GiftCertificateResponse.toDto(giftCertificateCrudDao.add(giftCertificate));
+        GiftCertificate giftCertificate = certificate.toIdentity();
+        Set<Tag> tagSet = giftCertificate.getTags().stream().map(tag -> tagDao.findByName(tag.getName()).orElse(tag)).collect(Collectors.toSet());
+        giftCertificate.setTags(tagSet);
+        giftCertificateDao.add(giftCertificate);
+        return GiftCertificateResponse.toDto(giftCertificateDao.findById(giftCertificate.getId()).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
     }
 
     public void update(GiftCertificateUpdateRequest certificate, int id) {
-        giftCertificateCrudDao.update(certificate.toIdentity(id));
+        giftCertificateDao.update(prepareForUpdate(certificate, id));
+    }
+
+    private GiftCertificate prepareForUpdate(GiftCertificateUpdateRequest certificate, int id) {
+        GiftCertificate certificateToUpdate = giftCertificateDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND));
+        if (certificate.getName() != null) {
+            certificateToUpdate.setName(certificate.getName());
+        }
+        if (certificate.getDescription() != null) {
+            certificateToUpdate.setDescription(certificate.getDescription());
+        }
+        if (certificate.getDuration() != 0) {
+            certificateToUpdate.setDuration(certificate.getDuration());
+        }
+        if (certificate.getPrice() != 0) {
+            certificateToUpdate.setPrice(certificate.getPrice());
+        }
+        if (!certificate.getTags().isEmpty() && certificate.getTags().stream().filter(tag -> String.valueOf(tag.charAt(0)).equals("+") || String.valueOf(tag.charAt(0)).equals("-")).collect(Collectors.toSet()).size() == certificate.getTags().size()) {
+            Set<Tag> newTags = certificateToUpdate.getTags().stream().filter(tag ->
+                    certificate.getTags().stream().filter(tag1 -> tag1.substring(1).equals(tag.getName()) && String.valueOf(tag1.charAt(0)).equals("-")).findAny().isEmpty()
+            ).collect(Collectors.toSet());
+            newTags = Stream.concat(certificate.getTags().stream().filter(tag -> String.valueOf(tag.charAt(0)).equals("+")).map(tag -> {
+                tag = tag.substring(1);
+                return tagDao.findByName(tag).orElse(Tag.builder().setName(tag).build());
+
+            }), newTags.stream()).collect(Collectors.toSet());
+            certificateToUpdate.setTags(newTags);
+            return certificateToUpdate;
+        } else {
+            throw new ServiceException(ExceptionDefinition.TAG_UPDATE_OPERATION_NOT_SPECIFIED);
+        }
     }
 
     public void delete(int id) {
-        giftCertificateCrudDao.delete(id);
+        giftCertificateDao.delete(giftCertificateDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
     }
 
 }

@@ -1,7 +1,12 @@
 package com.epam.esm.dto.request;
 
+import com.epam.esm.models.GiftCertificate;
+import com.epam.esm.models.Order;
+import com.epam.esm.models.User;
+
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class OrderRequest {
 
@@ -44,6 +49,13 @@ public class OrderRequest {
         return getUserId() == that.getUserId() && Objects.equals(getGiftCertificates(), that.getGiftCertificates());
     }
 
+    public Order toIdentity(){
+        return Order.builder()
+                .setUser(User.builder().setId(userId).build())
+                .setCertificates(giftCertificates.stream()
+                        .map(gift-> GiftCertificate.builder()
+                                .setId(gift).build()).collect(Collectors.toList())).build();
+    }
     @Override
     public int hashCode() {
         return Objects.hash(getUserId(), getGiftCertificates());

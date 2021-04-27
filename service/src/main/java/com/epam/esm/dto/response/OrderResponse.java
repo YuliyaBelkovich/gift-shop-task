@@ -1,5 +1,6 @@
 package com.epam.esm.dto.response;
 
+import com.epam.esm.models.Order;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDateTime;
@@ -71,5 +72,43 @@ public class OrderResponse extends RepresentationModel<OrderResponse> {
                 ", cost=" + cost +
                 ", createDate=" + createDate +
                 '}';
+    }
+
+    public static OrderResponse toDto(Order order) {
+        return builder()
+                .setId(order.getId())
+                .setCost(order.getCost())
+                .setCreateDate(order.getCreateDate())
+                .build();
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private int id;
+        private double cost;
+        private LocalDateTime createDate;
+
+        public Builder setId(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setCost(double cost) {
+            this.cost = cost;
+            return this;
+        }
+
+        public Builder setCreateDate(LocalDateTime createDate) {
+            this.createDate = createDate;
+            return this;
+        }
+
+        public OrderResponse build() {
+            return new OrderResponse(id, cost, createDate);
+        }
     }
 }

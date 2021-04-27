@@ -13,7 +13,8 @@ public interface TagService {
 
     TagResponse save(TagRequest tag);
 
-
     void delete(int id);
+
+    List<TagResponse> findAll(int page);
 
 }

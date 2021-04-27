@@ -5,7 +5,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,7 +16,6 @@ public class GiftCertificate implements Identifiable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "gift_certificate_id")
     private int id;
 
     @Column(unique = true, nullable = false)
@@ -45,7 +43,7 @@ public class GiftCertificate implements Identifiable {
     private Set<Tag> tags;
 
     @ManyToMany(mappedBy = "certificates")
-    private List<Order> orders;
+    private Set<Order> orders;
 
     private GiftCertificate() {
     }
@@ -58,7 +56,15 @@ public class GiftCertificate implements Identifiable {
         this.tags = tags;
     }
 
-    private GiftCertificate(int id, String name, String description, double price, int duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<Tag> tags) {
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
+    }
+
+    private GiftCertificate(int id, String name, String description, double price, int duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<Tag> tags, Set<Order> orders) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -67,6 +73,7 @@ public class GiftCertificate implements Identifiable {
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
         this.tags = tags;
+        this.orders = orders;
     }
 
     public void addTag(Tag tag) {
@@ -181,6 +188,7 @@ public class GiftCertificate implements Identifiable {
         private LocalDateTime createDate;
         private LocalDateTime lastUpdateDate;
         private Set<Tag> tags;
+        private Set<Order> orders;
 
         public Builder setId(int id) {
             this.id = id;
@@ -222,8 +230,13 @@ public class GiftCertificate implements Identifiable {
             return this;
         }
 
+        public Builder setOrders(Set<Order> orders) {
+            this.orders = orders;
+            return this;
+        }
+
         public GiftCertificate build() {
-            return new GiftCertificate(id, name, description, price, duration, createDate, lastUpdateDate, tags);
+            return new GiftCertificate(id, name, description, price, duration, createDate, lastUpdateDate, tags, orders);
         }
     }
 }

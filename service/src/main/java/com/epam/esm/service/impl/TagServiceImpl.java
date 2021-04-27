@@ -9,12 +9,13 @@ import com.epam.esm.models.Tag;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class TagServiceImpl implements TagService {
 
     private TagDao tagDao;
@@ -28,8 +29,12 @@ public class TagServiceImpl implements TagService {
         return tagDao.findAll().stream().map(TagResponse::toDto).collect(Collectors.toList());
     }
 
+    public List<TagResponse> findAll(int page){
+        return tagDao.findAll(page).stream().map(TagResponse::toDto).collect(Collectors.toList());
+    }
+
     public TagResponse findById(int id) {
-        return TagResponse.toDto(tagDao.findById(id).orElseThrow(()-> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
+        return TagResponse.toDto(tagDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
     }
 
     public TagResponse save(TagRequest tag) {
@@ -43,6 +48,6 @@ public class TagServiceImpl implements TagService {
     }
 
     public void delete(int id) {
-        tagDao.delete(id);
+        tagDao.delete(tagDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
     }
 }

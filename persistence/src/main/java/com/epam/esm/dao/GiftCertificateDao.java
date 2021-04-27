@@ -7,17 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public interface GiftCertificateDao {
+public interface GiftCertificateDao extends CrudDao<GiftCertificate>{
 
-    List<GiftCertificate> findAll();
-
-    Optional<GiftCertificate> findById(int id);
-
-    GiftCertificate add(GiftCertificate certificate);
+    List<GiftCertificate> findAll(Map<String, String> params);
 
     void update(GiftCertificate certificate);
 
-    void delete(int id);
-
+    Optional<GiftCertificate> findByName(String name);
 
 }

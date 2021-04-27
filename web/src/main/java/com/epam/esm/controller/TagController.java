@@ -24,9 +24,13 @@ public class TagController {
     }
 
 
+//    @GetMapping
+//    public ResponseEntity<List<TagResponse>> findAll() {
+//        return ResponseEntity.ok(service.findAll());
+//    }
     @GetMapping
-    public ResponseEntity<List<TagResponse>> findAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<TagResponse>> findAllPage(@RequestParam(name = "page") int page){
+        return ResponseEntity.ok(service.findAll(page));
     }
 
     @GetMapping("/{id}")

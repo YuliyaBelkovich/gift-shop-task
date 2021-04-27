@@ -43,11 +43,11 @@ public class UserController {
 
     @GetMapping("/{id}/orders")
     public ResponseEntity<List<OrderResponse>> getAllOrders(@PathVariable("id") int id) {
-        return null;
+        return ResponseEntity.status(HttpStatus.OK).body(service.findOrdersByUserId(id));
     }
 
     @GetMapping("/{userId}/orders/{orderId}")
     private ResponseEntity<OrderResponse> getOneOrder(@PathVariable("userId") int userId, @PathVariable("orderId") int orderId) {
-        return null;
+        return ResponseEntity.status(HttpStatus.OK).body(service.findOrderById(userId, orderId));
     }
 }

@@ -1,6 +1,6 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dao.GiftCertificateDaoImpl;
+import com.epam.esm.dao.impl.GiftCertificateDaoImpl;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.service.impl.GiftCertificateServiceImpl;
 import org.junit.jupiter.api.BeforeEach;

@@ -53,7 +53,7 @@ class TagDaoImplTest {
 
     @Test
     public void delete() {
-        dao.delete(3);
+//        dao.delete(3);
 
         Tag actual = dao.findById(3).orElse(null);
 

@@ -47,8 +47,8 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
 
         if (params.isEmpty()) {
             return ((page - 1) * 2 < count.intValue()) ?
-                    new PageableResponse<>(em.createQuery(criteriaQuery).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList(), page, totalPages, pageSize)
-                    : new PageableResponse<>(new ArrayList<>(), page, totalPages, pageSize);
+                    new PageableResponse<>(em.createQuery(criteriaQuery).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList(), page, totalPages, pageSize, count.intValue())
+                    : new PageableResponse<>(new ArrayList<>(), page, totalPages, pageSize, count.intValue());
         }
 
         List<Predicate> predicates = new ArrayList<>();
@@ -72,8 +72,8 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
             }
         }
         return ((page - 1) * 2 < count.intValue()) ?
-                new PageableResponse<>(em.createQuery(criteriaQuery).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList(), page, totalPages, pageSize)
-                : new PageableResponse<>(new ArrayList<>(), page, totalPages, pageSize);
+                new PageableResponse<>(em.createQuery(criteriaQuery).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList(), page, totalPages, pageSize, count.intValue())
+                : new PageableResponse<>(new ArrayList<>(), page, totalPages, pageSize, count.intValue());
     }
 
     public Optional<GiftCertificate> findByName(String name) {

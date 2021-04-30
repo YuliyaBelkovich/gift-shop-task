@@ -50,8 +50,8 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         criteriaQuery.select(userRoot.get("orders")).where(cb.equal(userRoot.get("id"), id));
 
         return ((page - 1) * 2 < count.intValue()) ?
-                new PageableResponse<>(em.createQuery(criteriaQuery).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList(), page, totalPages, pageSize)
-                : new PageableResponse<>(new ArrayList<>(), page, totalPages, pageSize);
+                new PageableResponse<>(em.createQuery(criteriaQuery).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList(), page, totalPages, pageSize, count.intValue())
+                : new PageableResponse<>(new ArrayList<>(), page, totalPages, pageSize, count.intValue());
     }
 
     public Optional<Order> findUserOrderById(int userId, int orderId) {

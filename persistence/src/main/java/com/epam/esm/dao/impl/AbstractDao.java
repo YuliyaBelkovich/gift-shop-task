@@ -9,7 +9,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractDao<T extends Identifiable> implements CrudDao<T> {
@@ -40,8 +39,8 @@ public abstract class AbstractDao<T extends Identifiable> implements CrudDao<T> 
         }
 
         return ((page - 1) * 2 < count.intValue()) ?
-                new PageableResponse<>(em.createQuery(select).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList(), page, totalPages, pageSize)
-                : new PageableResponse<>(new ArrayList<>(), page, totalPages, pageSize);
+                new PageableResponse<>(em.createQuery(select).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList(), page, totalPages, pageSize, count.intValue())
+                : new PageableResponse<>(new ArrayList<>(), page, totalPages, pageSize, count.intValue());
     }
 
     @Override

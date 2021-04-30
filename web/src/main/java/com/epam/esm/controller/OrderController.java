@@ -4,6 +4,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import com.epam.esm.dto.request.OrderRequest;
 import com.epam.esm.dto.response.OrderResponse;
+import com.epam.esm.models.PageableResponse;
 import com.epam.esm.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -27,14 +28,14 @@ public class OrderController {
     }
 
     @GetMapping
-    public CollectionModel<OrderResponse> getAll() {
-        return CollectionModel.of(service.findAll().stream().map(this::addSelfLink).collect(Collectors.toList()));
+    public CollectionModel<OrderResponse> getAll(@RequestParam(name = "page", defaultValue = "1") int page, @RequestParam(name = "pageSize", defaultValue = "20") int pageSize) {
+        return addPaginationLinks(service.findAll(page, pageSize));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponse> getById(@PathVariable("id") int id) {
         OrderResponse response = service.findById(id);
-        return ResponseEntity.ok(addSelfLink(response));
+        return ResponseEntity.ok(addLinks(response));
     }
 
     @DeleteMapping("/{id}")
@@ -46,10 +47,35 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@RequestBody @Valid OrderRequest orderRequest) {
         OrderResponse response = service.save(orderRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addSelfLink(response));
+        return ResponseEntity.status(HttpStatus.CREATED).body(addLinks(response));
     }
 
-    private OrderResponse addSelfLink(OrderResponse response){
-        return response.add(linkTo(OrderController.class).slash(response.getId()).withSelfRel());
+    private OrderResponse addLinks(OrderResponse response) {
+        response.add(linkTo(OrderController.class).slash(response.getId()).withSelfRel());
+        for (Integer certificateId : response.getCertificateIds()) {
+            response.add(linkTo(methodOn(GiftCertificateController.class).getById(certificateId)).withRel("certificates"));
+        }
+        return response;
+    }
+
+    private CollectionModel<OrderResponse> addPaginationLinks(PageableResponse<OrderResponse> response) {
+        CollectionModel<OrderResponse> responses = CollectionModel.of(response.getResponses().stream().map(this::addLinks).collect(Collectors.toList()));
+        responses.add(linkTo(methodOn(OrderController.class).getAll(response.getCurrentPage(), response.getPageSize())).withSelfRel())
+                .add(linkTo(methodOn(OrderController.class).getAll(1, response.getPageSize())).withRel("first_page"))
+                .add(linkTo(methodOn(OrderController.class).getAll(response.getLastPage(), response.getPageSize())).withRel("last_page"));
+        if (response.getResponses().isEmpty() || response.getCurrentPage() == response.getLastPage() && response.getCurrentPage() == response.getCurrentPage()) {
+            return responses;
+        }
+        if (response.getCurrentPage() == 1) {
+            responses.add(linkTo(methodOn(OrderController.class).getAll(response.getCurrentPage() + 1, response.getPageSize())).withRel("next_page"));
+        }
+        if (response.getCurrentPage() > 1 && response.getCurrentPage() < response.getLastPage()) {
+            responses.add(linkTo(methodOn(OrderController.class).getAll(response.getCurrentPage() + 1, response.getPageSize())).withRel("next_page"));
+            responses.add(linkTo(methodOn(OrderController.class).getAll(response.getCurrentPage() - 1, response.getPageSize())).withRel("previous_page"));
+        }
+        if (response.getCurrentPage() == response.getLastPage()) {
+            responses.add(linkTo(methodOn(OrderController.class).getAll(response.getCurrentPage() - 1, response.getPageSize())).withRel("previous_page"));
+        }
+        return responses;
     }
 }

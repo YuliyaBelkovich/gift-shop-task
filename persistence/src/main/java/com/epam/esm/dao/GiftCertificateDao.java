@@ -1,6 +1,7 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.models.GiftCertificate;
+import com.epam.esm.models.PageableResponse;
 import com.epam.esm.models.Tag;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 public interface GiftCertificateDao extends CrudDao<GiftCertificate>{
 
-    List<GiftCertificate> findAll(Map<String, String> params);
+    PageableResponse<GiftCertificate> findAll(Map<String, String> params, int page, int pageSize);
 
     void update(GiftCertificate certificate);
 

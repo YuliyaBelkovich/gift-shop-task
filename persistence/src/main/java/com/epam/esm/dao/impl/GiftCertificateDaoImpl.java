@@ -2,6 +2,7 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.models.GiftCertificate;
+import com.epam.esm.models.PageableResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -12,23 +13,42 @@ import javax.persistence.criteria.*;
 import java.util.*;
 
 @Repository
-public class GiftCertificateDaoImpl implements GiftCertificateDao {
+public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> implements GiftCertificateDao {
 
     private EntityManager em;
 
     @Autowired
     public GiftCertificateDaoImpl(EntityManager em) {
+        super(em);
         this.em = em;
     }
 
-    public List<GiftCertificate> findAll(Map<String, String> params) {
+    protected Class<GiftCertificate> getIdentityClass() {
+        return GiftCertificate.class;
+    }
+
+    public PageableResponse<GiftCertificate> findAll(Map<String, String> params, int page, int pageSize) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
+
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        countQuery.select(cb.count(countQuery.from(GiftCertificate.class)));
+        Long count = em.createQuery(countQuery).getSingleResult();
+
         CriteriaQuery<GiftCertificate> criteriaQuery = cb.createQuery(GiftCertificate.class);
         Root<GiftCertificate> certificateRoot = criteriaQuery.from(GiftCertificate.class);
         criteriaQuery.select(certificateRoot);
 
+        int totalPages;
+        if (count.intValue() % pageSize > 0) {
+            totalPages = (count.intValue() / pageSize) + 1;
+        } else {
+            totalPages = count.intValue() / pageSize;
+        }
+
         if (params.isEmpty()) {
-            return em.createQuery(criteriaQuery).getResultList();
+            return ((page - 1) * 2 < count.intValue()) ?
+                    new PageableResponse<>(em.createQuery(criteriaQuery).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList(), page, totalPages, pageSize)
+                    : new PageableResponse<>(new ArrayList<>(), page, totalPages, pageSize);
         }
 
         List<Predicate> predicates = new ArrayList<>();
@@ -51,18 +71,9 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
                 criteriaQuery.orderBy(cb.desc(certificateRoot.get(params.get("sort_by"))));
             }
         }
-        return em.createQuery(criteriaQuery).getResultList();
-    }
-
-    @Override
-    public List<GiftCertificate> findAll() {
-        return em.createQuery("SELECT a FROM GiftCertificate a", GiftCertificate.class).getResultList();
-    }
-
-    @Override
-    public Optional<GiftCertificate> findById(int id) {
-        GiftCertificate result = em.find(GiftCertificate.class, id);
-        return result == null ? Optional.empty() : Optional.of(result);
+        return ((page - 1) * 2 < count.intValue()) ?
+                new PageableResponse<>(em.createQuery(criteriaQuery).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList(), page, totalPages, pageSize)
+                : new PageableResponse<>(new ArrayList<>(), page, totalPages, pageSize);
     }
 
     public Optional<GiftCertificate> findByName(String name) {
@@ -76,17 +87,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
 
     @Override
-    public void add(GiftCertificate certificate) {
-        em.persist(certificate);
-    }
-
-    @Override
     public void update(GiftCertificate certificate) {
         em.merge(certificate);
-    }
-
-    @Override
-    public void delete(GiftCertificate certificate) {
-        em.remove(certificate);
     }
 }

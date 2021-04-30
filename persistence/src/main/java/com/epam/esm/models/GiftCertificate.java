@@ -48,6 +48,18 @@ public class GiftCertificate implements Identifiable {
     private GiftCertificate() {
     }
 
+    private GiftCertificate(int id, String name, String description, double price, int duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<Tag> tags, Set<Order> orders) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.createDate = createDate;
+        this.lastUpdateDate = lastUpdateDate;
+        this.tags = tags;
+        this.orders = orders;
+    }
+
     public Set<Tag> getTags() {
         return tags;
     }
@@ -61,18 +73,6 @@ public class GiftCertificate implements Identifiable {
     }
 
     public void setOrders(Set<Order> orders) {
-        this.orders = orders;
-    }
-
-    private GiftCertificate(int id, String name, String description, double price, int duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<Tag> tags, Set<Order> orders) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-        this.tags = tags;
         this.orders = orders;
     }
 

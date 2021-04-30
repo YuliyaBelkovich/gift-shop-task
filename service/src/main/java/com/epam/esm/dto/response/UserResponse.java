@@ -2,9 +2,10 @@ package com.epam.esm.dto.response;
 
 import com.epam.esm.models.User;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.util.Objects;
-
+@Relation(collectionRelation = "content", itemRelation = "user")
 public class UserResponse extends RepresentationModel<UserResponse> {
 
     private int id;

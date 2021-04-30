@@ -4,11 +4,13 @@ import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.OrderDao;
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dto.request.OrderRequest;
+import com.epam.esm.dto.response.GiftCertificateResponse;
 import com.epam.esm.dto.response.OrderResponse;
 import com.epam.esm.exception.ExceptionDefinition;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.models.GiftCertificate;
 import com.epam.esm.models.Order;
+import com.epam.esm.models.PageableResponse;
 import com.epam.esm.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,8 +35,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponse> findAll() {
-        return orderDao.findAll().stream().map(OrderResponse::toDto).collect(Collectors.toList());
+    public PageableResponse<OrderResponse> findAll(int page, int pageSize) {
+        PageableResponse<Order> orders = orderDao.findAll(page, pageSize);
+        List<OrderResponse> responses = orders.getResponses().stream().map(OrderResponse::toDto).collect(Collectors.toList());
+        return new PageableResponse<>(responses, orders.getCurrentPage(), orders.getLastPage(), orders.getPageSize());
     }
 
     @Override

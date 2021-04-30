@@ -8,6 +8,4 @@ import java.util.Optional;
 public interface TagDao extends CrudDao<Tag> {
 
     Optional<Tag> findByName(String name);
-
-    List<Tag> findAll(int page);
 }

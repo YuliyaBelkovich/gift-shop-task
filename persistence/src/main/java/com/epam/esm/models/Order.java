@@ -30,10 +30,10 @@ public class Order implements Identifiable {
             inverseJoinColumns = {@JoinColumn(name = "gift_certificate_id")})
     private List<GiftCertificate> certificates;
 
-    public Order() {
+    private Order() {
     }
 
-    public Order(int id, double cost, LocalDateTime createDate, User user, List<GiftCertificate> certificates) {
+    private Order(int id, double cost, LocalDateTime createDate, User user, List<GiftCertificate> certificates) {
         this.id = id;
         this.cost = cost;
         this.createDate = createDate;
@@ -81,10 +81,6 @@ public class Order implements Identifiable {
         this.certificates = certificates;
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -111,6 +107,10 @@ public class Order implements Identifiable {
                 ", user=" + user +
                 ", certificates=" + certificates +
                 '}';
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {

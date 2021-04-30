@@ -6,6 +6,9 @@ import com.epam.esm.dto.response.OrderResponse;
 import com.epam.esm.dto.response.UserResponse;
 import com.epam.esm.exception.ExceptionDefinition;
 import com.epam.esm.exception.ServiceException;
+import com.epam.esm.models.Order;
+import com.epam.esm.models.PageableResponse;
+import com.epam.esm.models.User;
 import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,18 +34,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponse> findAll() {
-        return userDao.findAll().stream().map(UserResponse::toDto).collect(Collectors.toList());
+    public PageableResponse<UserResponse> findAll(int page, int pageSize) {
+        PageableResponse<User> users = userDao.findAll(page, pageSize);
+        List<UserResponse> responses = users.getResponses().stream().map(UserResponse::toDto).collect(Collectors.toList());
+        return new PageableResponse<>(responses, users.getCurrentPage(), users.getLastPage(), users.getPageSize());
     }
 
     @Override
-    public List<OrderResponse> findOrdersByUserId(int id) {
-        return userDao.findUserOrders(id).stream().map(OrderResponse::toDto).collect(Collectors.toList());
+    public PageableResponse<OrderResponse> findOrdersByUserId(int id, int page, int pageSize) {
+        PageableResponse<Order> orders = userDao.findUserOrders(id, page, pageSize);
+        List<OrderResponse> responses = orders.getResponses().stream().map(OrderResponse::toDto).collect(Collectors.toList());
+        return new PageableResponse<>(responses, orders.getCurrentPage(), orders.getLastPage(), orders.getPageSize());
     }
 
     @Override
     public OrderResponse findOrderById(int userId, int orderId) {
-        return OrderResponse.toDto(userDao.findUserOrderById(userId,orderId).orElseThrow(()->new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
+        return OrderResponse.toDto(userDao.findUserOrderById(userId, orderId).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
     }
 
 

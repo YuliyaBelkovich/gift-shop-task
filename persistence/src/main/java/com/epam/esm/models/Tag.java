@@ -7,12 +7,14 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity(name="Tag")
+@Entity(name = "Tag")
 @SelectBeforeUpdate
 public class Tag implements Identifiable, Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @Column(unique = true, nullable = false)
     private String name;
 
@@ -20,14 +22,6 @@ public class Tag implements Identifiable, Serializable {
     private Set<GiftCertificate> giftCertificates;
 
     private Tag() {
-    }
-
-    public Set<GiftCertificate> getGiftCertificates() {
-        return giftCertificates;
-    }
-
-    public void setGiftCertificates(Set<GiftCertificate> giftCertificates) {
-        this.giftCertificates = giftCertificates;
     }
 
     public Tag(int id, String name, Set<GiftCertificate> giftCertificates) {
@@ -51,6 +45,14 @@ public class Tag implements Identifiable, Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<GiftCertificate> getGiftCertificates() {
+        return giftCertificates;
+    }
+
+    public void setGiftCertificates(Set<GiftCertificate> giftCertificates) {
+        this.giftCertificates = giftCertificates;
     }
 
     @Override

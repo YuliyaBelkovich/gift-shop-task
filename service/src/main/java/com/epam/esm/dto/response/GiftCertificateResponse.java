@@ -4,13 +4,14 @@ import com.epam.esm.models.GiftCertificate;
 import com.epam.esm.models.Tag;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Relation(collectionRelation = "content", itemRelation = "gift_certificate")
 public class GiftCertificateResponse extends RepresentationModel<GiftCertificateResponse> {
 
     private int id;
@@ -18,7 +19,7 @@ public class GiftCertificateResponse extends RepresentationModel<GiftCertificate
     private String description;
     private double price;
     private int duration;
-    private Set<String> tags;
+    private Set<TagResponse> tags;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createDate;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
@@ -27,7 +28,7 @@ public class GiftCertificateResponse extends RepresentationModel<GiftCertificate
     private GiftCertificateResponse() {
     }
 
-    private GiftCertificateResponse(int id, String name, String description, double price, int duration, Set<String> tags, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
+    private GiftCertificateResponse(int id, String name, String description, double price, int duration, Set<TagResponse> tags, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -42,8 +43,48 @@ public class GiftCertificateResponse extends RepresentationModel<GiftCertificate
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public Set<TagResponse> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<TagResponse> tags) {
+        this.tags = tags;
     }
 
     public LocalDateTime getCreateDate() {
@@ -60,46 +101,6 @@ public class GiftCertificateResponse extends RepresentationModel<GiftCertificate
 
     public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public Set<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<String> tags) {
-        this.tags = tags;
     }
 
     @Override
@@ -146,7 +147,7 @@ public class GiftCertificateResponse extends RepresentationModel<GiftCertificate
         private String description;
         private double price;
         private int duration;
-        private Set<String> tags;
+        private Set<TagResponse> tags;
         private LocalDateTime createDate;
         private LocalDateTime lastUpdateDate;
 
@@ -176,7 +177,7 @@ public class GiftCertificateResponse extends RepresentationModel<GiftCertificate
         }
 
         public Builder setTags(Set<Tag> tags) {
-            this.tags = tags.stream().map(Tag::getName).collect(Collectors.toSet());
+            this.tags = tags.stream().map(TagResponse::toDto).collect(Collectors.toSet());
             return this;
         }
 

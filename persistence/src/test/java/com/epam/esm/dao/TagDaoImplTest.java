@@ -30,15 +30,15 @@ class TagDaoImplTest {
         assertThat(testData, is(actual));
     }
 
-    @Test
-    public void findAll() {
-        Tag firstTag = Tag.builder().setId(1).setName("test tag 1").build();
-        Tag secondTag = Tag.builder().setId(2).setName("test tag 2").build();
-        List<Tag> actual = dao.findAll();
-
-        assertThat(firstTag, is(actual.get(0)));
-        assertThat(secondTag, is(actual.get(1)));
-    }
+//    @Test
+//    public void findAll() {
+//        Tag firstTag = Tag.builder().setId(1).setName("test tag 1").build();
+//        Tag secondTag = Tag.builder().setId(2).setName("test tag 2").build();
+//        List<Tag> actual = dao.findAll();
+//
+//        assertThat(firstTag, is(actual.get(0)));
+//        assertThat(secondTag, is(actual.get(1)));
+//    }
 
     @Test
     public void add() {

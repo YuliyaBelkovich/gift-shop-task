@@ -8,12 +8,14 @@ import com.epam.esm.dto.request.GiftCertificateUpdateRequest;
 import com.epam.esm.exception.ExceptionDefinition;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.models.GiftCertificate;
+import com.epam.esm.models.PageableResponse;
 import com.epam.esm.models.Tag;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,8 +41,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return GiftCertificateResponse.toDto(giftCertificate);
     }
 
-    public List<GiftCertificateResponse> findAll(Map<String, String> params) {
-        return giftCertificateDao.findAll(params).stream().map(GiftCertificateResponse::toDto).collect(Collectors.toList());
+    public PageableResponse<GiftCertificateResponse> findAll(Map<String, String> params, int page, int pageSize) {
+        PageableResponse<GiftCertificate> certificates = giftCertificateDao.findAll(params, page, pageSize);
+        List<GiftCertificateResponse> responses  = certificates.getResponses().stream().map(GiftCertificateResponse::toDto).collect(Collectors.toList());
+        return new PageableResponse<>(responses, certificates.getCurrentPage(), certificates.getLastPage(), certificates.getPageSize());
     }
 
     public GiftCertificateResponse save(GiftCertificateRequest certificate) {
@@ -72,20 +76,24 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (certificate.getPrice() != 0) {
             certificateToUpdate.setPrice(certificate.getPrice());
         }
-        if (!certificate.getTags().isEmpty() && certificate.getTags().stream().filter(tag -> String.valueOf(tag.charAt(0)).equals("+") || String.valueOf(tag.charAt(0)).equals("-")).collect(Collectors.toSet()).size() == certificate.getTags().size()) {
-            Set<Tag> newTags = certificateToUpdate.getTags().stream().filter(tag ->
-                    certificate.getTags().stream().filter(tag1 -> tag1.substring(1).equals(tag.getName()) && String.valueOf(tag1.charAt(0)).equals("-")).findAny().isEmpty()
-            ).collect(Collectors.toSet());
-            newTags = Stream.concat(certificate.getTags().stream().filter(tag -> String.valueOf(tag.charAt(0)).equals("+")).map(tag -> {
-                tag = tag.substring(1);
-                return tagDao.findByName(tag).orElse(Tag.builder().setName(tag).build());
+        if (certificate.getTags() != null) {
+            if (certificate.getTags().stream().filter(tag -> String.valueOf(tag.charAt(0)).equals("+") || String.valueOf(tag.charAt(0)).equals("-")).collect(Collectors.toSet()).size() == certificate.getTags().size()) {
+                Set<Tag> newTags = certificateToUpdate.getTags().stream().filter(tag ->
+                        certificate.getTags().stream().filter(tag1 -> tag1.substring(1).equals(tag.getName()) && String.valueOf(tag1.charAt(0)).equals("-")).findAny().isEmpty()
+                ).collect(Collectors.toSet());
+                newTags = Stream.concat(certificate.getTags().stream().filter(tag -> String.valueOf(tag.charAt(0)).equals("+")).map(tag -> {
+                    tag = tag.substring(1);
+                    return tagDao.findByName(tag).orElse(Tag.builder().setName(tag).build());
 
-            }), newTags.stream()).collect(Collectors.toSet());
-            certificateToUpdate.setTags(newTags);
-            return certificateToUpdate;
-        } else {
-            throw new ServiceException(ExceptionDefinition.TAG_UPDATE_OPERATION_NOT_SPECIFIED);
+                }), newTags.stream()).collect(Collectors.toSet());
+                certificateToUpdate.setTags(newTags);
+                certificateToUpdate.setLastUpdateDate(LocalDateTime.now());
+                return certificateToUpdate;
+            } else {
+                throw new ServiceException(ExceptionDefinition.TAG_UPDATE_OPERATION_NOT_SPECIFIED);
+            }
         }
+        return certificateToUpdate;
     }
 
     public void delete(int id) {

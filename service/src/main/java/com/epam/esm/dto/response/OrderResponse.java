@@ -1,25 +1,35 @@
 package com.epam.esm.dto.response;
 
+import com.epam.esm.models.GiftCertificate;
 import com.epam.esm.models.Order;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+@Relation(collectionRelation = "content", itemRelation = "order")
 public class OrderResponse extends RepresentationModel<OrderResponse> {
 
     private int id;
     private double cost;
     private LocalDateTime createDate;
+    @JsonIgnore
+    private Integer [] certificateIds;
 
     public OrderResponse() {
     }
 
-    public OrderResponse(int id, double cost, LocalDateTime createDate) {
+    public OrderResponse(int id, double cost, LocalDateTime createDate, Integer... certificateIds) {
         this.id = id;
         this.cost = cost;
         this.createDate = createDate;
+        this.certificateIds = certificateIds;
     }
+
+
 
     public int getId() {
         return id;
@@ -43,6 +53,14 @@ public class OrderResponse extends RepresentationModel<OrderResponse> {
 
     public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
+    }
+
+    public Integer[] getCertificateIds() {
+        return certificateIds;
+    }
+
+    public void setCertificateIds(Integer... certificateIds) {
+        this.certificateIds = certificateIds;
     }
 
     @Override
@@ -79,6 +97,7 @@ public class OrderResponse extends RepresentationModel<OrderResponse> {
                 .setId(order.getId())
                 .setCost(order.getCost())
                 .setCreateDate(order.getCreateDate())
+                .setCertificateIds(order.getCertificates().stream().map(GiftCertificate::getId).collect(Collectors.toList()).toArray(Integer[]::new))
                 .build();
     }
 
@@ -91,6 +110,7 @@ public class OrderResponse extends RepresentationModel<OrderResponse> {
         private int id;
         private double cost;
         private LocalDateTime createDate;
+        private Integer [] certificateIds;
 
         public Builder setId(int id) {
             this.id = id;
@@ -107,8 +127,13 @@ public class OrderResponse extends RepresentationModel<OrderResponse> {
             return this;
         }
 
+        public Builder setCertificateIds(Integer... certificateIds) {
+            this.certificateIds = certificateIds;
+            return this;
+        }
+
         public OrderResponse build() {
-            return new OrderResponse(id, cost, createDate);
+            return new OrderResponse(id, cost, createDate, certificateIds);
         }
     }
 }

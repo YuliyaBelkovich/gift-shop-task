@@ -4,13 +4,17 @@ import com.epam.esm.models.GiftCertificate;
 import com.epam.esm.models.Order;
 import com.epam.esm.models.User;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class OrderRequest {
-
+    @NotNull(message = "Please, provide user id")
+    @Min(value = 1, message = "User id can't be less than 1")
     private int userId;
+    @NotNull(message = "Please, indicate the certificates to purchase")
     private List<Integer> giftCertificates;
 
     public OrderRequest() {

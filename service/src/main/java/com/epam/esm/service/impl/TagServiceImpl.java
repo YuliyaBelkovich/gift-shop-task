@@ -2,9 +2,12 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.request.TagRequest;
+import com.epam.esm.dto.response.OrderResponse;
 import com.epam.esm.dto.response.TagResponse;
 import com.epam.esm.exception.ExceptionDefinition;
 import com.epam.esm.exception.ServiceException;
+import com.epam.esm.models.Order;
+import com.epam.esm.models.PageableResponse;
 import com.epam.esm.models.Tag;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +28,10 @@ public class TagServiceImpl implements TagService {
         this.tagDao = tagDao;
     }
 
-    public List<TagResponse> findAll() {
-        return tagDao.findAll().stream().map(TagResponse::toDto).collect(Collectors.toList());
-    }
-
-    public List<TagResponse> findAll(int page){
-        return tagDao.findAll(page).stream().map(TagResponse::toDto).collect(Collectors.toList());
+    public PageableResponse<TagResponse> findAll(int page, int pageSize) {
+        PageableResponse<Tag> tags = tagDao.findAll(page, pageSize);
+        List<TagResponse> responses = tags.getResponses().stream().map(TagResponse::toDto).collect(Collectors.toList());
+        return new PageableResponse<>(responses, tags.getCurrentPage(), tags.getLastPage(), tags.getPageSize());
     }
 
     public TagResponse findById(int id) {

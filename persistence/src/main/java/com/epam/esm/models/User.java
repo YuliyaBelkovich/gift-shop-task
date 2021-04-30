@@ -21,10 +21,10 @@ public class User implements Identifiable {
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
-    public User() {
+    private User() {
     }
 
-    public User(int id, String name, String email, String password) {
+    private User(int id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;

@@ -27,12 +27,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
-                                                                         HttpHeaders headers, HttpStatus status, WebRequest request) {
+                                                                         HttpHeaders headers,
+                                                                         HttpStatus status, WebRequest request) {
         return createErrorResponse(ExceptionDefinition.METHOD_NOT_SUPPORTED);
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex,
+                                                                     HttpHeaders headers, HttpStatus status,
+                                                                     WebRequest request) {
         return createErrorResponse(ExceptionDefinition.UNSUPPORTED_MEDIA_TYPE);
     }
 
@@ -44,7 +47,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers, HttpStatus status, WebRequest request) {
+                                                                  HttpHeaders headers, HttpStatus status,
+                                                                  WebRequest request) {
         List<String> messages = new ArrayList<>();
         for (ObjectError error : ex.getBindingResult().getAllErrors()) {
             messages.add(error.getDefaultMessage());
@@ -77,7 +81,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
+                                                                   HttpStatus status, WebRequest request) {
         return createErrorResponse(ExceptionDefinition.INTERNAL_SERVER_ERROR);
     }
 

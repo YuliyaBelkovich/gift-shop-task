@@ -47,10 +47,21 @@ public class OrderController {
      * @return collection of orders
      */
     @GetMapping
-    public CollectionModel<OrderResponse> getAll(@RequestParam(name = "page", defaultValue = "1") @Min(value = 1, message = "Page number can't be less then 1") int page, @RequestParam(name = "pageSize", defaultValue = "20") @Min(value = 1, message = "Page size can't be less then 1") int pageSize) {
+    public CollectionModel<OrderResponse> getAll
+    (@RequestParam(name = "page", defaultValue = "1")
+     @Min(value = 1, message = "Page number can't be less then 1") int page,
+     @RequestParam(name = "pageSize", defaultValue = "20")
+     @Min(value = 1, message = "Page size can't be less then 1") int pageSize) {
         PageableResponse<OrderResponse> response = service.findAll(page, pageSize);
         return PagedModel.of(response.getResponses().stream()
-                .map(this::addLinks).collect(Collectors.toList()), new PagedModel.PageMetadata(response.getPageSize(), response.getCurrentPage(), response.getTotalElements(), response.getLastPage())).add(linkTo(methodOn(OrderController.class).getAll(response.getCurrentPage(), response.getPageSize())).withSelfRel());
+                        .map(this::addLinks)
+                        .collect(Collectors.toList()),
+                new PagedModel.PageMetadata(response.getPageSize(),
+                        response.getCurrentPage(),
+                        response.getTotalElements(),
+                        response.getLastPage()))
+                .add(linkTo(methodOn(OrderController.class)
+                        .getAll(response.getCurrentPage(), response.getPageSize())).withSelfRel());
     }
 
     /**
@@ -91,7 +102,8 @@ public class OrderController {
     private OrderResponse addLinks(OrderResponse response) {
         response.add(linkTo(OrderController.class).slash(response.getId()).withSelfRel());
         for (Integer certificateId : response.getCertificateIds()) {
-            response.add(linkTo(methodOn(GiftCertificateController.class).getById(certificateId)).withRel("certificates"));
+            response.add(linkTo(methodOn(GiftCertificateController.class)
+                    .getById(certificateId)).withRel("certificates"));
         }
         return response;
     }

@@ -46,10 +46,19 @@ public class UserController {
      * @return the all
      */
     @GetMapping
-    public CollectionModel<UserResponse> getAll(@RequestParam(name = "page", defaultValue = "1") @Min(value = 1, message = "Page number can't be less then 1") int page, @RequestParam(name = "pageSize", defaultValue = "20") @Min(value = 1, message = "Page size can't be less then 1") int pageSize) {
+    public CollectionModel<UserResponse> getAll(@RequestParam(name = "page", defaultValue = "1")
+                                                @Min(value = 1, message = "Page number can't be less then 1") int page,
+                                                @RequestParam(name = "pageSize", defaultValue = "20")
+                                                @Min(value = 1, message = "Page size can't be less then 1") int pageSize) {
         PageableResponse<UserResponse> response = service.findAll(page, pageSize);
         return PagedModel.of(response.getResponses().stream()
-                .map(this::addLinks).collect(Collectors.toList()), new PagedModel.PageMetadata(response.getPageSize(), response.getCurrentPage(), response.getTotalElements(), response.getLastPage())).add(linkTo(methodOn(UserController.class).getAll(response.getCurrentPage(), response.getPageSize())).withSelfRel());
+                        .map(this::addLinks).collect(Collectors.toList()),
+                new PagedModel.PageMetadata(response.getPageSize(),
+                        response.getCurrentPage(),
+                        response.getTotalElements(),
+                        response.getLastPage()))
+                .add(linkTo(methodOn(UserController.class)
+                        .getAll(response.getCurrentPage(), response.getPageSize())).withSelfRel());
     }
 
     /**
@@ -72,10 +81,20 @@ public class UserController {
      * @return the collection of orders
      */
     @GetMapping("/{id}/orders")
-    public CollectionModel<OrderResponse> getAllOrders(@PathVariable("id") int id, @RequestParam(name = "page", defaultValue = "1") @Min(value = 1, message = "Page number can't be less then 1") int page, @RequestParam(name = "pageSize", defaultValue = "20") @Min(value = 1, message = "Page size can't be less then 1") int pageSize) {
+    public CollectionModel<OrderResponse> getAllOrders
+    (@PathVariable("id") int id,
+     @RequestParam(name = "page", defaultValue = "1")
+     @Min(value = 1, message = "Page number can't be less then 1") int page,
+     @RequestParam(name = "pageSize", defaultValue = "20")
+     @Min(value = 1, message = "Page size can't be less then 1") int pageSize) {
         PageableResponse<OrderResponse> response = service.findOrdersByUserId(id, page, pageSize);
         return PagedModel.of(response.getResponses().stream()
-                .map(this::addOrderLinks).collect(Collectors.toList()), new PagedModel.PageMetadata(response.getPageSize(), response.getCurrentPage(), response.getTotalElements(), response.getLastPage())).add(linkTo(methodOn(UserController.class).getAllOrders(id, response.getCurrentPage(), response.getPageSize())).withSelfRel());
+                        .map(this::addOrderLinks).collect(Collectors.toList()),
+                new PagedModel.PageMetadata(response.getPageSize(),
+                        response.getCurrentPage(),
+                        response.getTotalElements(),
+                        response.getLastPage())).add(linkTo(methodOn(UserController.class)
+                .getAllOrders(id, response.getCurrentPage(), response.getPageSize())).withSelfRel());
     }
 
     /**
@@ -86,14 +105,16 @@ public class UserController {
      * @return order
      */
     @GetMapping("/{userId}/orders/{orderId}")
-    public ResponseEntity<OrderResponse> getOneOrder(@PathVariable("userId") int userId, @PathVariable("orderId") int orderId) {
+    public ResponseEntity<OrderResponse> getOneOrder(@PathVariable("userId") int userId,
+                                                     @PathVariable("orderId") int orderId) {
         return ResponseEntity.status(HttpStatus.OK).body(addOrderLinks(service.findOrderById(userId, orderId)));
     }
 
     private UserResponse addLinks(UserResponse response) {
         return response
                 .add(linkTo(UserController.class).slash(response.getId()).withSelfRel())
-                .add(linkTo(methodOn(UserController.class).getAllOrders(response.getId(), 1, 20)).withRel("orders"));
+                .add(linkTo(methodOn(UserController.class)
+                        .getAllOrders(response.getId(), 1, 20)).withRel("orders"));
     }
 
     private OrderResponse addOrderLinks(OrderResponse response) {

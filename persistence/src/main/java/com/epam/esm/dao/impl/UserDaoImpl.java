@@ -57,7 +57,8 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = cb.createQuery(Order.class);
         Root<Order> orderRoot = criteriaQuery.from(Order.class);
-        criteriaQuery.where(cb.and(cb.equal(orderRoot.get("id"), orderId), cb.equal(orderRoot.join("user").get("id"), userId)));
+        criteriaQuery.where(cb.and(cb.equal(orderRoot.get("id"), orderId),
+                cb.equal(orderRoot.join("user").get("id"), userId)));
         criteriaQuery.select(orderRoot);
         Order result;
         try {

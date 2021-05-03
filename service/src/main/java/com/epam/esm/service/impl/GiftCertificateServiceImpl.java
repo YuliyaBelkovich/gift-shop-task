@@ -37,14 +37,20 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     public GiftCertificateResponse findById(int id) {
         GiftCertificate giftCertificate =
-                giftCertificateDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND));
+                giftCertificateDao.findById(id)
+                        .orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND));
         return GiftCertificateResponse.toDto(giftCertificate);
     }
 
     public PageableResponse<GiftCertificateResponse> findAll(Map<String, String> params, int page, int pageSize) {
         PageableResponse<GiftCertificate> certificates = giftCertificateDao.findAll(params, page, pageSize);
-        List<GiftCertificateResponse> responses = certificates.getResponses().stream().map(GiftCertificateResponse::toDto).collect(Collectors.toList());
-        return new PageableResponse<>(responses, certificates.getCurrentPage(), certificates.getLastPage(), certificates.getPageSize(), certificates.getTotalElements());
+        List<GiftCertificateResponse> responses = certificates.getResponses()
+                .stream().map(GiftCertificateResponse::toDto).collect(Collectors.toList());
+        return new PageableResponse<>(responses,
+                certificates.getCurrentPage(),
+                certificates.getLastPage(),
+                certificates.getPageSize(),
+                certificates.getTotalElements());
     }
 
     public GiftCertificateResponse save(GiftCertificateRequest certificate) {
@@ -52,10 +58,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             throw new ServiceException(ExceptionDefinition.IDENTITY_ALREADY_EXISTS);
         });
         GiftCertificate giftCertificate = certificate.toIdentity();
-        Set<Tag> tagSet = giftCertificate.getTags().stream().map(tag -> tagDao.findByName(tag.getName()).orElse(tag)).collect(Collectors.toSet());
+        Set<Tag> tagSet = giftCertificate.getTags().stream()
+                .map(tag -> tagDao.findByName(tag.getName()).orElse(tag)).collect(Collectors.toSet());
         giftCertificate.setTags(tagSet);
         giftCertificateDao.add(giftCertificate);
-        return GiftCertificateResponse.toDto(giftCertificateDao.findById(giftCertificate.getId()).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
+        return GiftCertificateResponse.toDto(giftCertificateDao.findById(giftCertificate.getId())
+                .orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
     }
 
     public void update(GiftCertificateUpdateRequest certificate, int id) {
@@ -63,7 +71,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     private GiftCertificate prepareForUpdate(GiftCertificateUpdateRequest certificate, int id) {
-        GiftCertificate certificateToUpdate = giftCertificateDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND));
+        GiftCertificate certificateToUpdate = giftCertificateDao.findById(id)
+                .orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND));
         if (certificate.getName() != null) {
             certificateToUpdate.setName(certificate.getName());
         }
@@ -77,15 +86,23 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             certificateToUpdate.setPrice(certificate.getPrice());
         }
         if (certificate.getTags() != null) {
-            if (certificate.getTags().stream().filter(tag -> String.valueOf(tag.charAt(0)).equals("+") || String.valueOf(tag.charAt(0)).equals("-")).collect(Collectors.toSet()).size() == certificate.getTags().size()) {
-                Set<Tag> newTags = certificateToUpdate.getTags().stream().filter(tag ->
-                        certificate.getTags().stream().filter(tag1 -> tag1.substring(1).equals(tag.getName()) && String.valueOf(tag1.charAt(0)).equals("-")).findAny().isEmpty()
-                ).collect(Collectors.toSet());
-                newTags = Stream.concat(certificate.getTags().stream().filter(tag -> String.valueOf(tag.charAt(0)).equals("+")).map(tag -> {
-                    tag = tag.substring(1);
-                    return tagDao.findByName(tag).orElse(Tag.builder().setName(tag).build());
+            if (certificate.getTags().stream()
+                    .filter(tag -> String.valueOf(tag.charAt(0)).equals("+")
+                            || String.valueOf(tag.charAt(0)).equals("-"))
+                    .collect(Collectors.toSet()).size() == certificate.getTags().size()) {
 
-                }), newTags.stream()).collect(Collectors.toSet());
+                Set<Tag> newTags = certificateToUpdate.getTags().stream()
+                        .filter(tag -> certificate.getTags().stream()
+                                .filter(tag1 -> tag1.substring(1).equals(tag.getName())
+                                        && String.valueOf(tag1.charAt(0)).equals("-")).findAny().isEmpty()
+                        ).collect(Collectors.toSet());
+
+                newTags = Stream.concat(certificate.getTags().stream()
+                                .filter(tag -> String.valueOf(tag.charAt(0)).equals("+")).map(tag -> {
+                                    tag = tag.substring(1);
+                                    return tagDao.findByName(tag).orElse(Tag.builder().setName(tag).build());
+                                }),
+                        newTags.stream()).collect(Collectors.toSet());
                 certificateToUpdate.setTags(newTags);
                 certificateToUpdate.setLastUpdateDate(LocalDateTime.now());
                 return certificateToUpdate;
@@ -97,7 +114,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     public void delete(int id) {
-        giftCertificateDao.delete(giftCertificateDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
+        giftCertificateDao.delete(giftCertificateDao.findById(id)
+                .orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
     }
 
 }

@@ -71,7 +71,8 @@ class UserServiceImplTest {
         List<UserResponse> expected = new ArrayList<>();
         expected.add(UserResponse.toDto(testData));
 
-        Mockito.when(userDao.findAll(1, 1)).thenReturn(new PageableResponse<>(userList, 1, 1, 1, 1));
+        Mockito.when(userDao.findAll(1, 1))
+                .thenReturn(new PageableResponse<>(userList, 1, 1, 1, 1));
 
         List<UserResponse> actual = service.findAll(1, 1).getResponses();
 
@@ -93,7 +94,8 @@ class UserServiceImplTest {
         orders.add(testData);
         expected.add(OrderResponse.toDto(testData));
 
-        Mockito.when(userDao.findUserOrders(1, 1, 1)).thenReturn(new PageableResponse<>(orders, 1, 1, 1, 1));
+        Mockito.when(userDao.findUserOrders(1, 1, 1))
+                .thenReturn(new PageableResponse<>(orders, 1, 1, 1, 1));
 
         List<OrderResponse> actual = service.findOrdersByUserId(1, 1, 1).getResponses();
 

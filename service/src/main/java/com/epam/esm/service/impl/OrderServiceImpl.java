@@ -36,21 +36,31 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public PageableResponse<OrderResponse> findAll(int page, int pageSize) {
         PageableResponse<Order> orders = orderDao.findAll(page, pageSize);
-        List<OrderResponse> responses = orders.getResponses().stream().map(OrderResponse::toDto).collect(Collectors.toList());
-        return new PageableResponse<>(responses, orders.getCurrentPage(), orders.getLastPage(), orders.getPageSize(), orders.getTotalElements());
+        List<OrderResponse> responses = orders.getResponses().stream()
+                .map(OrderResponse::toDto).collect(Collectors.toList());
+        return new PageableResponse<>(responses,
+                orders.getCurrentPage(),
+                orders.getLastPage(),
+                orders.getPageSize(),
+                orders.getTotalElements());
     }
 
     @Override
     public OrderResponse findById(int id) {
-        return OrderResponse.toDto(orderDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
+        return OrderResponse.toDto(orderDao.findById(id)
+                .orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
     }
 
     @Override
     public OrderResponse save(OrderRequest orderRequest) {
         Order order = orderRequest.toIdentity();
-        order.setUser(userDao.findById(order.getUser().getId()).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
+        order.setUser(userDao.findById(order.getUser().getId())
+                .orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
         double cost = 0;
-        List<GiftCertificate> giftCertificates = order.getCertificates().stream().map(g -> giftCertificateDao.findById(g.getId()).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND))).collect(Collectors.toList());
+        List<GiftCertificate> giftCertificates = order.getCertificates().stream()
+                .map(g -> giftCertificateDao.findById(g.getId())
+                        .orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)))
+                .collect(Collectors.toList());
         for (GiftCertificate g :
                 giftCertificates) {
             cost += g.getPrice();
@@ -58,7 +68,8 @@ public class OrderServiceImpl implements OrderService {
         order.setCertificates(giftCertificates);
         order.setCost(cost);
         orderDao.add(order);
-        return OrderResponse.toDto(orderDao.findById(order.getId()).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
+        return OrderResponse.toDto(orderDao.findById(order.getId())
+                .orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
     }
 
     @Override

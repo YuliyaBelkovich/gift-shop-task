@@ -50,7 +50,8 @@ class GiftCertificateServiceImplTest {
         List<GiftCertificateResponse> expected = new ArrayList<>();
         expected.add(GiftCertificateResponse.toDto(testData));
 
-        Mockito.when(dao.findAll(new HashMap<>(), 1, 1)).thenReturn(new PageableResponse<GiftCertificate>(testDataList, 1, 1, 1, 1));
+        Mockito.when(dao.findAll(new HashMap<>(), 1, 1))
+                .thenReturn(new PageableResponse<>(testDataList, 1, 1, 1, 1));
 
         List<GiftCertificateResponse> actual = service.findAll(new HashMap<>(), 1, 1).getResponses();
 

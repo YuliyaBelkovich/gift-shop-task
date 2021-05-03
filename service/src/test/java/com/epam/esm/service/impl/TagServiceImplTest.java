@@ -40,7 +40,8 @@ class TagServiceImplTest {
         List<TagResponse> expected = new ArrayList<>();
         expected.add(TagResponse.toDto(firstTag));
 
-        Mockito.when(tagDao.findAll(1, 1)).thenReturn(new PageableResponse<Tag>(tagList, 1, 1, 1, 1));
+        Mockito.when(tagDao.findAll(1, 1))
+                .thenReturn(new PageableResponse<>(tagList, 1, 1, 1, 1));
 
         List<TagResponse> actual = service.findAll(1, 1).getResponses();
 

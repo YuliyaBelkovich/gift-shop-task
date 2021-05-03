@@ -47,10 +47,20 @@ public class TagController {
      * @return the collection of orders
      */
     @GetMapping
-    public CollectionModel<TagResponse> findAll(@RequestParam(name = "page", defaultValue = "1") @Min(value = 1, message = "Page number can't be less then 1") int page, @RequestParam(name = "pageSize", defaultValue = "20") @Min(value = 1, message = "Page size can't be less then 1") int pageSize) {
+    public CollectionModel<TagResponse> findAll
+    (@RequestParam(name = "page", defaultValue = "1")
+     @Min(value = 1, message = "Page number can't be less then 1") int page,
+     @RequestParam(name = "pageSize", defaultValue = "20")
+     @Min(value = 1, message = "Page size can't be less then 1") int pageSize) {
         PageableResponse<TagResponse> response = service.findAll(page, pageSize);
         return PagedModel.of(response.getResponses().stream()
-                .map(this::addLinks).collect(Collectors.toList()), new PagedModel.PageMetadata(response.getPageSize(), response.getCurrentPage(), response.getTotalElements(), response.getLastPage())).add(linkTo(methodOn(TagController.class).findAll(response.getCurrentPage(), response.getPageSize())).withSelfRel());
+                        .map(this::addLinks).collect(Collectors.toList()),
+                new PagedModel.PageMetadata(response.getPageSize(),
+                        response.getCurrentPage(),
+                        response.getTotalElements(),
+                        response.getLastPage()))
+                .add(linkTo(methodOn(TagController.class)
+                        .findAll(response.getCurrentPage(), response.getPageSize())).withSelfRel());
     }
 
     /**

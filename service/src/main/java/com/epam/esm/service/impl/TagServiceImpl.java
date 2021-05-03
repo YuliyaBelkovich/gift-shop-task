@@ -28,12 +28,19 @@ public class TagServiceImpl implements TagService {
 
     public PageableResponse<TagResponse> findAll(int page, int pageSize) {
         PageableResponse<Tag> tags = tagDao.findAll(page, pageSize);
-        List<TagResponse> responses = tags.getResponses().stream().map(TagResponse::toDto).collect(Collectors.toList());
-        return new PageableResponse<>(responses, tags.getCurrentPage(), tags.getLastPage(), tags.getPageSize(), tags.getTotalElements());
+        List<TagResponse> responses = tags.getResponses().stream()
+                .map(TagResponse::toDto)
+                .collect(Collectors.toList());
+        return new PageableResponse<>(responses,
+                tags.getCurrentPage(),
+                tags.getLastPage(),
+                tags.getPageSize(),
+                tags.getTotalElements());
     }
 
     public TagResponse findById(int id) {
-        return TagResponse.toDto(tagDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
+        return TagResponse.toDto(tagDao.findById(id)
+                .orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
     }
 
     public TagResponse save(TagRequest tag) {
@@ -47,10 +54,12 @@ public class TagServiceImpl implements TagService {
     }
 
     public TagResponse getMostWidelyUsedTag() {
-        return TagResponse.toDto(tagDao.getMostWidelyUsedTag().orElseThrow(() -> new ServiceException(ExceptionDefinition.UNABLE_TO_FIND_MOST_POPULAR_TAG)));
+        return TagResponse.toDto(tagDao.getMostWidelyUsedTag()
+                .orElseThrow(() -> new ServiceException(ExceptionDefinition.UNABLE_TO_FIND_MOST_POPULAR_TAG)));
     }
 
     public void delete(int id) {
-        tagDao.delete(tagDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
+        tagDao.delete(tagDao.findById(id)
+                .orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
     }
 }

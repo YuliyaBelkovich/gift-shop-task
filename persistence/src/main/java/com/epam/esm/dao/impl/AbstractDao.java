@@ -32,7 +32,11 @@ public abstract class AbstractDao<T extends Identifiable> implements CrudDao<T> 
         CriteriaQuery<T> select = tagCriteriaQuery.select(root);
 
         int totalPages = getTotalPages(count.intValue(), pageSize);
-        return new PageableResponse<>(em.createQuery(select).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList(), page, totalPages, pageSize, count.intValue());
+        return
+                new PageableResponse<>(em.createQuery(select)
+                        .setFirstResult((page - 1) * pageSize)
+                        .setMaxResults(pageSize).getResultList(),
+                        page, totalPages, pageSize, count.intValue());
     }
 
     @Override

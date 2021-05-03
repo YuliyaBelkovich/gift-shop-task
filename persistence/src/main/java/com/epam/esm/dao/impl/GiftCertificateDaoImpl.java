@@ -27,29 +27,44 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
         return GiftCertificate.class;
     }
 
-    public PageableResponse<GiftCertificate> findAll(Map<String, String> params, int page, int pageSize) {
+    public PageableResponse<GiftCertificate> findAll(Map<String, String> params,
+                                                     int page, int pageSize) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-        Long count = 0L;
         CriteriaQuery<GiftCertificate> criteriaQuery = cb.createQuery(GiftCertificate.class);
-        Root<GiftCertificate> certificateRoot = criteriaQuery.from(GiftCertificate.class);
 
+        Long count;
+
+        Root<GiftCertificate> certificateRoot = criteriaQuery.from(GiftCertificate.class);
+        Root<GiftCertificate> countRoot = countQuery.from(GiftCertificate.class);
+
+        countQuery.select(cb.count(countRoot));
         if (!params.isEmpty()) {
             List<Predicate> predicates = new ArrayList<>();
+            List<Predicate> countPredicates = new ArrayList<>();
+
             if (params.containsKey("tag_names")) {
                 List<Predicate> tagPredicates = new ArrayList<>();
-                Arrays.stream(params.get("tag_names").split(";")).forEach(tagName -> tagPredicates.add(cb.equal(certificateRoot.join("tags").get("name"), tagName)));
+                List<Predicate> tagCountPredicates = new ArrayList<>();
+                Arrays.stream(params.get("tag_names").split(";"))
+                        .forEach(tagName -> {
+                            tagPredicates
+                                    .add(cb.equal(certificateRoot.join("tags").get("name"), tagName));
+                            tagCountPredicates.add(cb.equal(countRoot.join("tags").get("name"), tagName));
+                        });
                 predicates.add(cb.and(tagPredicates.toArray(Predicate[]::new)));
+                countPredicates.add(cb.and(tagCountPredicates.toArray(Predicate[]::new)));
             }
             if (params.containsKey("name")) {
                 predicates.add(cb.like(certificateRoot.get("name"), "%" + params.get("name") + "%"));
+                countPredicates.add(cb.like(countRoot.get("name"), "%" + params.get("name") + "%"));
             }
             if (params.containsKey("description")) {
                 predicates.add(cb.like(certificateRoot.get("description"), "%" + params.get("description") + "%"));
+                countPredicates.add(cb.like(countRoot.get("description"), "%" + params.get("description") + "%"));
             }
             criteriaQuery.select(certificateRoot).where(cb.and(predicates.toArray(Predicate[]::new)));
-//            countQuery.select(cb.count(countQuery.from(GiftCertificate.class))).where(criteriaQuery.getRestriction());
             if (params.containsKey("sort_by")) {
                 if (params.get("sort_by").split(":")[0].equals("asc")) {
                     criteriaQuery.orderBy(cb.asc(certificateRoot.get(params.get("sort_by").split(":")[1])));
@@ -58,18 +73,22 @@ public class GiftCertificateDaoImpl extends AbstractDao<GiftCertificate> impleme
                     criteriaQuery.orderBy(cb.desc(certificateRoot.get(params.get("sort_by").split(":")[1])));
                 }
             }
+            countQuery.where(countPredicates.toArray(Predicate[]::new));
         }
-        countQuery.select(cb.count(countQuery.from(GiftCertificate.class)));
         count = em.createQuery(countQuery).getSingleResult();
         int totalPages = getTotalPages(count.intValue(), pageSize);
 
-        return new PageableResponse<>(em.createQuery(criteriaQuery).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList(), page, totalPages, pageSize, count.intValue());
+        return new PageableResponse<>(em.createQuery(criteriaQuery)
+                .setFirstResult((page - 1) * pageSize)
+                .setMaxResults(pageSize)
+                .getResultList(), page, totalPages, pageSize, count.intValue());
     }
 
     public Optional<GiftCertificate> findByName(String name) {
         GiftCertificate result;
         try {
-            result = em.createQuery("FROM GiftCertificate WHERE name ='" + name + "'", GiftCertificate.class).getSingleResult();
+            result = em.createQuery("FROM GiftCertificate WHERE name ='" + name + "'", GiftCertificate.class)
+                    .getSingleResult();
         } catch (NoResultException e) {
             return Optional.empty();
         }

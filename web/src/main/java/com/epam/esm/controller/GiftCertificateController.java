@@ -53,12 +53,22 @@ public class GiftCertificateController {
      * @return the all
      */
     @GetMapping()
-    public CollectionModel<GiftCertificateResponse> getAll(@RequestParam(required = false) Map<String,
-            String> allParams, @RequestParam(name = "page", defaultValue = "1") @Min(value = 1, message = "Page number can't be less then 1") int page,
-                                                           @RequestParam(name = "pageSize", defaultValue = "20") @Min(value = 1, message = "Page size can't be less then 1") int pageSize) {
+    public CollectionModel<GiftCertificateResponse> getAll
+    (@RequestParam(required = false) Map<String, String> allParams,
+     @RequestParam(name = "page", defaultValue = "1")
+     @Min(value = 1, message = "Page number can't be less then 1") int page,
+     @RequestParam(name = "pageSize", defaultValue = "20")
+     @Min(value = 1, message = "Page size can't be less then 1") int pageSize) {
         PageableResponse<GiftCertificateResponse> response = service.findAll(allParams, page, pageSize);
         return PagedModel.of(response.getResponses().stream()
-                .map(this::addLinks).collect(Collectors.toList()), new PagedModel.PageMetadata(response.getPageSize(), response.getCurrentPage(), response.getTotalElements(), response.getLastPage())).add(linkTo(methodOn(GiftCertificateController.class).getAll(allParams, response.getCurrentPage(), response.getPageSize())).withSelfRel());
+                        .map(this::addLinks)
+                        .collect(Collectors.toList()),
+                new PagedModel.PageMetadata(response.getPageSize(),
+                        response.getCurrentPage(),
+                        response.getTotalElements(),
+                        response.getLastPage()))
+                .add(linkTo(methodOn(GiftCertificateController.class)
+                        .getAll(allParams, response.getCurrentPage(), response.getPageSize())).withSelfRel());
     }
 
     /**
@@ -108,7 +118,11 @@ public class GiftCertificateController {
 
     private GiftCertificateResponse addLinks(GiftCertificateResponse response) {
         response.add(linkTo(GiftCertificateController.class).slash(response.getId()).withSelfRel());
-        response.setTags(response.getTags().stream().map(tag -> tag.add(linkTo(TagController.class).slash(tag.getId()).withSelfRel())).collect(Collectors.toSet()));
+        response.setTags(response.getTags()
+                .stream()
+                .map(tag ->
+                        tag.add(linkTo(TagController.class).slash(tag.getId()).withSelfRel()))
+                .collect(Collectors.toSet()));
         return response;
     }
 

@@ -142,6 +142,7 @@ public class GiftCertificateResponse extends RepresentationModel<GiftCertificate
     }
 
     public static class Builder {
+
         private int id;
         private String name;
         private String description;

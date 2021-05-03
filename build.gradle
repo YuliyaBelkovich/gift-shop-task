@@ -29,21 +29,15 @@ subprojects {
         implementation "javax.el:javax.el-api:${javaxElVersion}"
         implementation "javax.validation:validation-api:${javaxValidationVersion}"
         implementation "org.hibernate.validator:hibernate-validator:${hibernateVersion}"
-
         implementation "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-autoconfigure:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
         implementation "org.springframework.boot:spring-boot-starter-hateoas:${springBootVersion}"
-
-        implementation 'org.hibernate:hibernate-core:5.4.2.Final'
-        implementation 'org.springframework:spring-orm:5.3.6'
-
-        implementation 'org.apache.tomcat:tomcat-jdbc:10.0.5'
+        implementation 'org.springframework.boot:spring-boot-starter-validation:2.4.5'
 
         testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
         testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-
 
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     }

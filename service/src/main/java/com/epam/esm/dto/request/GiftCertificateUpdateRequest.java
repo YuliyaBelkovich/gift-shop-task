@@ -9,9 +9,9 @@ import java.util.List;
 
 public class GiftCertificateUpdateRequest {
 
-    @Size(min=2, max=30, message = "Name length should be between 2 and 30 symbols")
+    @Size(min = 2, max = 30, message = "Name length should be between 2 and 30 symbols")
     private String name;
-    @Size(min=2, max=1000, message = "Description length should be between 2 and 30 symbols")
+    @Size(min = 2, max = 1000, message = "Description length should be between 2 and 30 symbols")
     private String description;
     @DecimalMin(value = "0", message = "Price can't be less than 0.01$")
     private double price;

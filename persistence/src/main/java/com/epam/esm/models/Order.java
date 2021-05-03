@@ -1,6 +1,7 @@
 package com.epam.esm.models;
 
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "orders")
 @DynamicInsert
+@Audited
 public class Order implements Identifiable {
 
     @Id
@@ -17,7 +19,7 @@ public class Order implements Identifiable {
     private int id;
     @Column(nullable = false)
     private double cost;
-    @Column(name = "create_date", columnDefinition = "timestamp not null default CURRENT_TIMESTAMP")
+    @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
@@ -31,6 +33,13 @@ public class Order implements Identifiable {
     private List<GiftCertificate> certificates;
 
     private Order() {
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (createDate == null) {
+            createDate = LocalDateTime.now();
+        }
     }
 
     private Order(int id, double cost, LocalDateTime createDate, User user, List<GiftCertificate> certificates) {

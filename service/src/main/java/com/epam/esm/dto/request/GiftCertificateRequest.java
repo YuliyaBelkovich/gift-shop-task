@@ -82,7 +82,7 @@ public class GiftCertificateRequest {
                 .setDescription(description)
                 .setDuration(duration)
                 .setPrice(price)
-                .setTags(tags.stream().map(tag-> Tag.builder().setName(tag).build()).collect(Collectors.toSet()))
+                .setTags(tags.stream().map(tag -> Tag.builder().setName(tag).build()).collect(Collectors.toSet()))
                 .build();
     }
 

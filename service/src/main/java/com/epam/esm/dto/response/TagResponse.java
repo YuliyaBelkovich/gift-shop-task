@@ -63,6 +63,7 @@ public class TagResponse extends RepresentationModel<TagResponse> {
     }
 
     public static class Builder {
+
         private int id;
         private String name;
 

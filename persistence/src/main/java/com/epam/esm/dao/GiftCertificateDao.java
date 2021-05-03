@@ -2,9 +2,7 @@ package com.epam.esm.dao;
 
 import com.epam.esm.models.GiftCertificate;
 import com.epam.esm.models.PageableResponse;
-import com.epam.esm.models.Tag;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 

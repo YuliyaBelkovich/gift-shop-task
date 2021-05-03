@@ -2,11 +2,9 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.request.TagRequest;
-import com.epam.esm.dto.response.OrderResponse;
 import com.epam.esm.dto.response.TagResponse;
 import com.epam.esm.exception.ExceptionDefinition;
 import com.epam.esm.exception.ServiceException;
-import com.epam.esm.models.Order;
 import com.epam.esm.models.PageableResponse;
 import com.epam.esm.models.Tag;
 import com.epam.esm.service.TagService;
@@ -31,7 +29,7 @@ public class TagServiceImpl implements TagService {
     public PageableResponse<TagResponse> findAll(int page, int pageSize) {
         PageableResponse<Tag> tags = tagDao.findAll(page, pageSize);
         List<TagResponse> responses = tags.getResponses().stream().map(TagResponse::toDto).collect(Collectors.toList());
-        return new PageableResponse<>(responses, tags.getCurrentPage(), tags.getLastPage(), tags.getPageSize());
+        return new PageableResponse<>(responses, tags.getCurrentPage(), tags.getLastPage(), tags.getPageSize(), tags.getTotalElements());
     }
 
     public TagResponse findById(int id) {
@@ -46,6 +44,10 @@ public class TagServiceImpl implements TagService {
         });
         tagDao.add(tagToSave);
         return findById(tagToSave.getId());
+    }
+
+    public TagResponse getMostWidelyUsedTag() {
+        return TagResponse.toDto(tagDao.getMostWidelyUsedTag().orElseThrow(() -> new ServiceException(ExceptionDefinition.UNABLE_TO_FIND_MOST_POPULAR_TAG)));
     }
 
     public void delete(int id) {

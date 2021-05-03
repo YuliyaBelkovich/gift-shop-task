@@ -1,12 +1,12 @@
-package com.epam.esm.service;
+package com.epam.esm.service.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.request.TagRequest;
 import com.epam.esm.dto.response.TagResponse;
+import com.epam.esm.models.PageableResponse;
 import com.epam.esm.models.Tag;
-import com.epam.esm.service.impl.TagServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -40,11 +40,11 @@ class TagServiceImplTest {
         List<TagResponse> expected = new ArrayList<>();
         expected.add(TagResponse.toDto(firstTag));
 
-//        Mockito.when(tagDao.findAll()).thenReturn(tagList);
-//
-//        List<TagResponse> actual = service.findAll();
-//
-//        assertEquals(expected, actual);
+        Mockito.when(tagDao.findAll(1, 1)).thenReturn(new PageableResponse<Tag>(tagList, 1, 1, 1, 1));
+
+        List<TagResponse> actual = service.findAll(1, 1).getResponses();
+
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -72,9 +72,13 @@ class TagServiceImplTest {
 
     @Test
     void delete() {
+        Tag testData = Tag.builder().setId(1).setName("test tag 4").build();
+
+        Mockito.when(tagDao.findById(testData.getId())).thenReturn(Optional.of(testData));
+
         service.delete(1);
 
-//        Mockito.verify(tagDao).delete(1);
+        Mockito.verify(tagDao).delete(testData);
 
     }
 }

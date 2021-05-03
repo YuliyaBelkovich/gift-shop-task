@@ -4,7 +4,6 @@ import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.OrderDao;
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dto.request.OrderRequest;
-import com.epam.esm.dto.response.GiftCertificateResponse;
 import com.epam.esm.dto.response.OrderResponse;
 import com.epam.esm.exception.ExceptionDefinition;
 import com.epam.esm.exception.ServiceException;
@@ -38,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
     public PageableResponse<OrderResponse> findAll(int page, int pageSize) {
         PageableResponse<Order> orders = orderDao.findAll(page, pageSize);
         List<OrderResponse> responses = orders.getResponses().stream().map(OrderResponse::toDto).collect(Collectors.toList());
-        return new PageableResponse<>(responses, orders.getCurrentPage(), orders.getLastPage(), orders.getPageSize());
+        return new PageableResponse<>(responses, orders.getCurrentPage(), orders.getLastPage(), orders.getPageSize(), orders.getTotalElements());
     }
 
     @Override

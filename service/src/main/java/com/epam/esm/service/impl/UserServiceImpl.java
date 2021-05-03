@@ -37,14 +37,14 @@ public class UserServiceImpl implements UserService {
     public PageableResponse<UserResponse> findAll(int page, int pageSize) {
         PageableResponse<User> users = userDao.findAll(page, pageSize);
         List<UserResponse> responses = users.getResponses().stream().map(UserResponse::toDto).collect(Collectors.toList());
-        return new PageableResponse<>(responses, users.getCurrentPage(), users.getLastPage(), users.getPageSize());
+        return new PageableResponse<>(responses, users.getCurrentPage(), users.getLastPage(), users.getPageSize(), users.getTotalElements());
     }
 
     @Override
     public PageableResponse<OrderResponse> findOrdersByUserId(int id, int page, int pageSize) {
         PageableResponse<Order> orders = userDao.findUserOrders(id, page, pageSize);
         List<OrderResponse> responses = orders.getResponses().stream().map(OrderResponse::toDto).collect(Collectors.toList());
-        return new PageableResponse<>(responses, orders.getCurrentPage(), orders.getLastPage(), orders.getPageSize());
+        return new PageableResponse<>(responses, orders.getCurrentPage(), orders.getLastPage(), orders.getPageSize(), orders.getTotalElements());
     }
 
     @Override

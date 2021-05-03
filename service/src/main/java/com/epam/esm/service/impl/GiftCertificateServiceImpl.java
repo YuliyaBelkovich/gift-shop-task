@@ -43,12 +43,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     public PageableResponse<GiftCertificateResponse> findAll(Map<String, String> params, int page, int pageSize) {
         PageableResponse<GiftCertificate> certificates = giftCertificateDao.findAll(params, page, pageSize);
-        List<GiftCertificateResponse> responses  = certificates.getResponses().stream().map(GiftCertificateResponse::toDto).collect(Collectors.toList());
-        return new PageableResponse<>(responses, certificates.getCurrentPage(), certificates.getLastPage(), certificates.getPageSize());
+        List<GiftCertificateResponse> responses = certificates.getResponses().stream().map(GiftCertificateResponse::toDto).collect(Collectors.toList());
+        return new PageableResponse<>(responses, certificates.getCurrentPage(), certificates.getLastPage(), certificates.getPageSize(), certificates.getTotalElements());
     }
 
     public GiftCertificateResponse save(GiftCertificateRequest certificate) {
-        tagDao.findByName(certificate.getName()).ifPresent(gift -> {
+        giftCertificateDao.findByName(certificate.getName()).ifPresent(gift -> {
             throw new ServiceException(ExceptionDefinition.IDENTITY_ALREADY_EXISTS);
         });
         GiftCertificate giftCertificate = certificate.toIdentity();

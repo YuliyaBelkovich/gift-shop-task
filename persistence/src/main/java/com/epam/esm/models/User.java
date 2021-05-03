@@ -1,7 +1,6 @@
 package com.epam.esm.models;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.List;
@@ -9,13 +8,17 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "user_gift")
+@Audited
 public class User implements Identifiable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String email;
+    @Column(nullable = false)
     private String password;
 
     @OneToMany(mappedBy = "user")
@@ -82,12 +85,21 @@ public class User implements Identifiable {
             return false;
         }
         User user = (User) o;
-        return getId() == user.getId() && Objects.equals(getName(), user.getName()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getOrders(), user.getOrders());
+        return getId() == user.getId() && Objects.equals(getName(), user.getName()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getPassword(), user.getPassword());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getName(), getEmail(), getPassword(), getOrders());
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'';
     }
 
     public static Builder builder() {

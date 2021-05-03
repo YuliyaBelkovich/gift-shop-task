@@ -31,22 +31,18 @@ public abstract class AbstractDao<T extends Identifiable> implements CrudDao<T> 
         Root<T> root = tagCriteriaQuery.from(getIdentityClass());
         CriteriaQuery<T> select = tagCriteriaQuery.select(root);
 
-        int totalPages;
-        if (count.intValue() % pageSize > 0) {
-            totalPages = (count.intValue() / pageSize) + 1;
-        } else {
-            totalPages = count.intValue() / pageSize;
-        }
-
-        return ((page - 1) * 2 < count.intValue()) ?
-                new PageableResponse<>(em.createQuery(select).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList(), page, totalPages, pageSize, count.intValue())
-                : new PageableResponse<>(new ArrayList<>(), page, totalPages, pageSize, count.intValue());
+        int totalPages = getTotalPages(count.intValue(), pageSize);
+        return new PageableResponse<>(em.createQuery(select).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList(), page, totalPages, pageSize, count.intValue());
     }
 
     @Override
     public Optional<T> findById(int id) {
         T result = em.find(getIdentityClass(), id);
         return result == null ? Optional.empty() : Optional.of(result);
+    }
+
+    protected int getTotalPages(int count, int pageSize) {
+        return (count % pageSize > 0) ? (count / pageSize) + 1 : count / pageSize;
     }
 
     @Override

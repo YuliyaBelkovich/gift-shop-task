@@ -4,8 +4,6 @@ import com.epam.esm.dto.response.OrderResponse;
 import com.epam.esm.dto.response.UserResponse;
 import com.epam.esm.models.PageableResponse;
 
-import java.util.List;
-
 public interface UserService {
 
     UserResponse findById(int id);

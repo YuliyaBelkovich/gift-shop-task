@@ -1,14 +1,17 @@
 package com.epam.esm.models;
 
 import org.hibernate.annotations.SelectBeforeUpdate;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
+
 @Entity(name = "Tag")
 @SelectBeforeUpdate
+@Audited
 public class Tag implements Identifiable, Serializable {
 
     @Id
@@ -89,7 +92,6 @@ public class Tag implements Identifiable, Serializable {
         private int id;
         private String name;
         private Set<GiftCertificate> giftCertificates;
-
 
         public Builder setId(int id) {
             this.id = id;

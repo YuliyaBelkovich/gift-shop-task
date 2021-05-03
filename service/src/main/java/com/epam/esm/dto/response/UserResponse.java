@@ -5,6 +5,7 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.util.Objects;
+
 @Relation(collectionRelation = "content", itemRelation = "user")
 public class UserResponse extends RepresentationModel<UserResponse> {
 
@@ -72,6 +73,7 @@ public class UserResponse extends RepresentationModel<UserResponse> {
     }
 
     public static class Builder {
+
         private int id;
         private String name;
 

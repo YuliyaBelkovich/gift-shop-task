@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -35,30 +36,35 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-        countQuery.select(cb.count(countQuery.from(GiftCertificate.class)));
+        Root<User> userCountRoot = countQuery.from(User.class);
+        countQuery.select(userCountRoot.get("orders")).where(cb.equal(userCountRoot.get("id"), id));
+        countQuery.select(cb.count(userCountRoot));
         Long count = em.createQuery(countQuery).getSingleResult();
 
-        int totalPages;
-        if (count.intValue() % pageSize > 0) {
-            totalPages = (count.intValue() / pageSize) + 1;
-        } else {
-            totalPages = count.intValue() / pageSize;
-        }
+        int totalPages = getTotalPages(count.intValue(), pageSize);
 
         CriteriaQuery<Order> criteriaQuery = cb.createQuery(Order.class);
         Root<User> userRoot = criteriaQuery.from(User.class);
         criteriaQuery.select(userRoot.get("orders")).where(cb.equal(userRoot.get("id"), id));
 
-        return ((page - 1) * 2 < count.intValue()) ?
-                new PageableResponse<>(em.createQuery(criteriaQuery).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList(), page, totalPages, pageSize, count.intValue())
-                : new PageableResponse<>(new ArrayList<>(), page, totalPages, pageSize, count.intValue());
+        return new PageableResponse<>(em.createQuery(criteriaQuery)
+                .setFirstResult((page - 1) * pageSize)
+                .setMaxResults(pageSize)
+                .getResultList(), page, totalPages, pageSize, count.intValue());
     }
 
     public Optional<Order> findUserOrderById(int userId, int orderId) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Order> criteriaQuery = cb.createQuery(Order.class);
-        Root<User> userRoot = criteriaQuery.from(User.class);
-        criteriaQuery.select(userRoot.get("orders")).where(cb.and(cb.equal(userRoot.get("id"), userId), cb.equal(userRoot.join("orders").get("id"), orderId)));
-        return Optional.of(em.createQuery(criteriaQuery).getSingleResult());
+        Root<Order> orderRoot = criteriaQuery.from(Order.class);
+        criteriaQuery.where(cb.and(cb.equal(orderRoot.get("id"), orderId), cb.equal(orderRoot.join("user").get("id"), userId)));
+        criteriaQuery.select(orderRoot);
+        Order result;
+        try {
+            result = em.createQuery(criteriaQuery).getSingleResult();
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+        return Optional.of(result);
     }
 }

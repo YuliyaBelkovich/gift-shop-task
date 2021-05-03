@@ -5,7 +5,6 @@ import com.epam.esm.dto.response.GiftCertificateResponse;
 import com.epam.esm.dto.request.GiftCertificateUpdateRequest;
 import com.epam.esm.models.PageableResponse;
 
-import java.util.List;
 import java.util.Map;
 
 public interface GiftCertificateService {

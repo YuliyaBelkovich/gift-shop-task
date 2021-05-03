@@ -2,6 +2,7 @@ package com.epam.esm.models;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Table(name = "gift_certificate")
 @DynamicInsert
 @DynamicUpdate
+@Audited
 public class GiftCertificate implements Identifiable {
 
     @Id
@@ -30,10 +32,10 @@ public class GiftCertificate implements Identifiable {
     @Column(nullable = false)
     private int duration;
 
-    @Column(name = "create_date", columnDefinition = "timestamp not null default CURRENT_TIMESTAMP")
+    @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
-    @Column(name = "last_update_date", columnDefinition = "timestamp not null default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP")
+    @Column(name = "last_update_date", nullable = false)
     private LocalDateTime lastUpdateDate;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -46,6 +48,19 @@ public class GiftCertificate implements Identifiable {
     private Set<Order> orders;
 
     private GiftCertificate() {
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (createDate == null && lastUpdateDate == null) {
+            createDate = LocalDateTime.now();
+            lastUpdateDate = LocalDateTime.now();
+        }
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        lastUpdateDate = LocalDateTime.now();
     }
 
     private GiftCertificate(int id, String name, String description, double price, int duration, LocalDateTime createDate, LocalDateTime lastUpdateDate, Set<Tag> tags, Set<Order> orders) {

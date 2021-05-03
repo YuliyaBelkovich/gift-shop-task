@@ -53,13 +53,18 @@ public class OrderRequest {
         return getUserId() == that.getUserId() && Objects.equals(getGiftCertificates(), that.getGiftCertificates());
     }
 
-    public Order toIdentity(){
+    public Order toIdentity() {
         return Order.builder()
                 .setUser(User.builder().setId(userId).build())
                 .setCertificates(giftCertificates.stream()
-                        .map(gift-> GiftCertificate.builder()
+                        .map(gift -> GiftCertificate.builder()
                                 .setId(gift).build()).collect(Collectors.toList())).build();
     }
+
+    public static OrderRequest toDto(Order order) {
+        return new OrderRequest(order.getUser().getId(), order.getCertificates().stream().map(GiftCertificate::getId).collect(Collectors.toList()));
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(getUserId(), getGiftCertificates());

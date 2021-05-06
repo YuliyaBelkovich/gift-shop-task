@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
             cost += g.getPrice();
         }
         order.setCertificates(giftCertificates);
-        order.setCost(cost);
+        order.setCost(formatCost(cost));
         orderDao.add(order);
         return OrderResponse.toDto(orderDao.findById(order.getId())
                 .orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
@@ -75,5 +77,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void delete(int id) {
         orderDao.delete(orderDao.findById(id).orElseThrow(() -> new ServiceException(ExceptionDefinition.IDENTITY_NOT_FOUND)));
+    }
+
+    private double formatCost(double cost){
+        DecimalFormat twoDForm = new DecimalFormat(".##");
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+        dfs.setDecimalSeparator('.');
+        twoDForm.setDecimalFormatSymbols(dfs);
+        return  Double.parseDouble(twoDForm.format(cost));
     }
 }

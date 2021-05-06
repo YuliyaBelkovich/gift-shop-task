@@ -43,6 +43,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     public PageableResponse<GiftCertificateResponse> findAll(Map<String, String> params, int page, int pageSize) {
+        if (!params.isEmpty()) {
+            validateParams(params);
+        }
         PageableResponse<GiftCertificate> certificates = giftCertificateDao.findAll(params, page, pageSize);
         List<GiftCertificateResponse> responses = certificates.getResponses()
                 .stream().map(GiftCertificateResponse::toDto).collect(Collectors.toList());
@@ -51,6 +54,25 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 certificates.getLastPage(),
                 certificates.getPageSize(),
                 certificates.getTotalElements());
+    }
+
+    private void validateParams(Map<String, String> params) {
+        if (params.containsKey("tag_names") && params.get("tag_names").contains(";")) {
+            if (params.get("tag_names").split(";").length % 2 != 0) {
+                throw new ServiceException(ExceptionDefinition.FILTER_TAG_FORMAT);
+            }
+        }
+        if (params.containsKey("sort_by")) {
+            if (!params.get("sort_by").split(":")[0].equals("asc")
+                    && !params.get("sort_by").split(":")[0].equals("desc")
+                    || params.get("sort_by").split(":").length % 2 != 0) {
+                throw new ServiceException(ExceptionDefinition.SORTING_FORMAT);
+            }
+            String field = params.get("sort_by").split(":")[1];
+            if (!field.equals("name") && !field.equals("createDate") && !field.equals("lastUpdateDate")) {
+                throw new ServiceException(ExceptionDefinition.SORTING_FORMAT);
+            }
+        }
     }
 
     public GiftCertificateResponse save(GiftCertificateRequest certificate) {
@@ -87,21 +109,20 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
         if (certificate.getTags() != null) {
             if (certificate.getTags().stream()
-                    .filter(tag -> String.valueOf(tag.charAt(0)).equals("+")
-                            || String.valueOf(tag.charAt(0)).equals("-"))
+                    .filter(tag -> tag.getOperation().equals("ADD")
+                            || tag.getOperation().equals("DELETE"))
                     .collect(Collectors.toSet()).size() == certificate.getTags().size()) {
 
                 Set<Tag> newTags = certificateToUpdate.getTags().stream()
                         .filter(tag -> certificate.getTags().stream()
-                                .filter(tag1 -> tag1.substring(1).equals(tag.getName())
-                                        && String.valueOf(tag1.charAt(0)).equals("-")).findAny().isEmpty()
+                                .filter(tag1 -> tag1.getName().equals(tag.getName())
+                                        && tag1.getOperation().equals("DELETE")).findAny().isEmpty()
                         ).collect(Collectors.toSet());
 
                 newTags = Stream.concat(certificate.getTags().stream()
-                                .filter(tag -> String.valueOf(tag.charAt(0)).equals("+")).map(tag -> {
-                                    tag = tag.substring(1);
-                                    return tagDao.findByName(tag).orElse(Tag.builder().setName(tag).build());
-                                }),
+                                .filter(tag -> tag.getOperation().equals("ADD"))
+                                .map(tag -> tagDao.findByName(tag.getName())
+                                        .orElse(Tag.builder().setName(tag.getName()).build())),
                         newTags.stream()).collect(Collectors.toSet());
                 certificateToUpdate.setTags(newTags);
                 certificateToUpdate.setLastUpdateDate(LocalDateTime.now());

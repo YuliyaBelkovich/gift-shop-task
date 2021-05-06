@@ -6,6 +6,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GiftCertificateUpdateRequest {
 
@@ -17,12 +18,12 @@ public class GiftCertificateUpdateRequest {
     private double price;
     @Min(value = 0, message = "Duration can't be less than 1 day")
     private int duration;
-    private List<String> tags;
+    private List<CertificateTagUpdateRequest> tags;
 
     public GiftCertificateUpdateRequest() {
     }
 
-    public GiftCertificateUpdateRequest(String name, String description, double price, int duration, List<String> tags) {
+    public GiftCertificateUpdateRequest(String name, String description, double price, int duration, List<CertificateTagUpdateRequest> tags) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -47,7 +48,7 @@ public class GiftCertificateUpdateRequest {
         this.duration = duration;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(List<CertificateTagUpdateRequest> tags) {
         this.tags = tags;
     }
 
@@ -67,7 +68,7 @@ public class GiftCertificateUpdateRequest {
         return duration;
     }
 
-    public List<String> getTags() {
+    public List<CertificateTagUpdateRequest> getTags() {
         return tags;
     }
 
@@ -83,6 +84,6 @@ public class GiftCertificateUpdateRequest {
 
     public static GiftCertificateUpdateRequest toDto(GiftCertificate giftCertificate, List<String> tags) {
         return new GiftCertificateUpdateRequest(giftCertificate.getName(), giftCertificate.getDescription(),
-                giftCertificate.getPrice(), giftCertificate.getDuration(), tags);
+                giftCertificate.getPrice(), giftCertificate.getDuration(), tags.stream().map(tag -> new CertificateTagUpdateRequest("NONE", tag)).collect(Collectors.toList()));
     }
 }

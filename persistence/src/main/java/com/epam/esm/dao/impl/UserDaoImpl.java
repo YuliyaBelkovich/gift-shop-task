@@ -1,7 +1,6 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.UserDao;
-import com.epam.esm.models.GiftCertificate;
 import com.epam.esm.models.Order;
 import com.epam.esm.models.PageableResponse;
 import com.epam.esm.models.User;
@@ -13,7 +12,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Repository

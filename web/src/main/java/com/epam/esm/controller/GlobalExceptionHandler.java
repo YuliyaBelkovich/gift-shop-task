@@ -2,7 +2,6 @@ package com.epam.esm.controller;
 
 import com.epam.esm.exception.ExceptionDefinition;
 import com.epam.esm.exception.ServiceException;
-import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

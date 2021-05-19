@@ -6,6 +6,7 @@ import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

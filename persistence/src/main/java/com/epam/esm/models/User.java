@@ -5,9 +5,14 @@ import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "user_gift")
+@Table(name = "user_gift",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "name"),
+                @UniqueConstraint(columnNames = "email")
+        })
 @Audited
 public class User implements Identifiable {
 
@@ -24,14 +29,22 @@ public class User implements Identifiable {
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
+
     private User() {
     }
 
-    private User(int id, String name, String email, String password) {
+    private User(int id, String name, String email, String password, List<Order> orders, Set<Role> roles) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.orders = orders;
+        this.roles = roles;
     }
 
     public List<Order> getOrders() {
@@ -76,6 +89,14 @@ public class User implements Identifiable {
         this.password = password;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -112,6 +133,7 @@ public class User implements Identifiable {
         private String email;
         private String password;
         private List<Order> orders;
+        private Set<Role> roles;
 
         public Builder setId(int id) {
             this.id = id;
@@ -138,8 +160,13 @@ public class User implements Identifiable {
             return this;
         }
 
+        public Builder setRoles(Set<Role> roles) {
+            this.roles = roles;
+            return this;
+        }
+
         public User build() {
-            return new User(id, name, email, password);
+            return new User(id, name, email, password, orders, roles);
         }
     }
 }

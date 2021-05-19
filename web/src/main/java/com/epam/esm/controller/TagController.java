@@ -12,6 +12,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -94,6 +95,7 @@ public class TagController {
      * @return newly created tag with the generated id
      */
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<TagResponse> add(@RequestBody @Valid TagRequest tag) {
         return ResponseEntity.status(HttpStatus.CREATED).body(addLinks(service.save(tag)));
     }
@@ -104,6 +106,7 @@ public class TagController {
      * @param id the tag id
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable("id") int id) {
         service.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

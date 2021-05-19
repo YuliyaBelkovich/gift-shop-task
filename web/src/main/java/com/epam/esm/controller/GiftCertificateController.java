@@ -12,6 +12,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.epam.esm.service.GiftCertificateService;
@@ -92,6 +93,7 @@ public class GiftCertificateController {
      * @return newly created gift certificate with generated id and createDate
      */
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<GiftCertificateResponse> createCertificate(@RequestBody @Valid GiftCertificateRequest certificate) {
         return ResponseEntity.status(HttpStatus.CREATED).body(addLinks(service.save(certificate)));
     }
@@ -103,6 +105,7 @@ public class GiftCertificateController {
      * @param id          the gift certificate id
      */
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> edit(@RequestBody @Valid GiftCertificateUpdateRequest certificate, @PathVariable("id") int id) {
         service.update(certificate, id);
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -114,6 +117,7 @@ public class GiftCertificateController {
      * @param id the gift certificate id
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable("id") int id) {
         service.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

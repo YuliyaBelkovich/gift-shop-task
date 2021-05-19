@@ -1,6 +1,7 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.UserDao;
+import com.epam.esm.models.GiftCertificate;
 import com.epam.esm.models.Order;
 import com.epam.esm.models.PageableResponse;
 import com.epam.esm.models.User;
@@ -61,6 +62,28 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         Order result;
         try {
             result = em.createQuery(criteriaQuery).getSingleResult();
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+        return Optional.of(result);
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return !em.createQuery("FROM User WHERE name ='" + username + "'", User.class).getResultList().isEmpty();
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return !em.createQuery("FROM User WHERE email ='" + email + "'", User.class).getResultList().isEmpty();
+    }
+
+    @Override
+    public Optional<User> findByName(String name) {
+        User result;
+        try {
+            result = em.createQuery("FROM User WHERE name ='" + name + "'", User.class)
+                    .getSingleResult();
         } catch (NoResultException e) {
             return Optional.empty();
         }

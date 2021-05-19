@@ -15,7 +15,7 @@ public class GiftCertificateRequest {
     @NotNull(message = "Please, provide a name")
     @Size(min = 2, max = 30, message = "Name length should be between 2 and 30 symbols")
     private String name;
-    @NotNull(message = "Please, provide a name")
+    @NotNull(message = "Please, provide a description")
     @Size(min = 2, max = 1000, message = "Description length should be between 2 and 30 symbols")
     private String description;
     @DecimalMin(value = "0.01", message = "Price can't be less than 0.01$")

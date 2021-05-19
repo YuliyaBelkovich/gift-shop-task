@@ -12,6 +12,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +49,7 @@ public class OrderController {
      * @return collection of orders
      */
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public CollectionModel<OrderResponse> getAll
     (@RequestParam(name = "page", defaultValue = "1")
      @Min(value = 1, message = "Page number can't be less than 1")
@@ -74,6 +76,7 @@ public class OrderController {
      * @return order object
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<OrderResponse> getById(@PathVariable("id") int id) {
         OrderResponse response = service.findById(id);
         return ResponseEntity.ok(addLinks(response));
@@ -85,6 +88,7 @@ public class OrderController {
      * @param id the order id
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable("id") int id) {
         service.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -97,6 +101,8 @@ public class OrderController {
      * @return newly created order with the generated id and createDate
      */
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') " +
+            "or hasRole('ROLE_USER') and #orderRequest.userId == authentication.principal.id")
     public ResponseEntity<OrderResponse> createOrder(@RequestBody @Valid OrderRequest orderRequest) {
         OrderResponse response = service.save(orderRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(addLinks(response));

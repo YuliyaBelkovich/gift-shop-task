@@ -11,4 +11,10 @@ public interface UserDao extends CrudDao<User> {
     PageableResponse<Order> findUserOrders(int id, int page, int pageSize);
 
     Optional<Order> findUserOrderById(int userId, int orderId);
+
+    boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
+
+    Optional<User> findByName(String name);
 }

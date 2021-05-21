@@ -15,7 +15,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -28,19 +27,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
     private AuthEntryPointJwt unauthorizedHandler;
     private AccessDeniedHandler accessDeniedHandler;
+    private AuthTokenFilter authTokenFilter;
 
     @Autowired
     public WebSecurityConfig(UserDetailsService userDetailsService,
                              AuthEntryPointJwt unauthorizedHandler,
-                             AccessDeniedHandler accessDeniedHandler) {
+                             AccessDeniedHandler accessDeniedHandler,
+                             AuthTokenFilter authTokenFilter) {
         this.userDetailsService = userDetailsService;
         this.unauthorizedHandler = unauthorizedHandler;
         this.accessDeniedHandler = accessDeniedHandler;
-    }
-
-    @Bean
-    public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
+        this.authTokenFilter = authTokenFilter;
     }
 
     @Override
@@ -69,19 +66,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.cors().and().csrf().disable()
-//                .oauth2Client().and().oauth2ResourceServer().and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .accessDeniedHandler(accessDeniedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/gift-shop/auth/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/certificates/**").permitAll()
                 .anyRequest().authenticated();
-//                .authorizeRequests(a -> a.antMatchers("/gift-shop/auth/**").permitAll()
-//                        .antMatchers(HttpMethod.GET, "/certificates/**").permitAll()
-//                        .antMatchers("/oauth2/**").permitAll()
-//                        .antMatchers("/login/**").permitAll()
-//                        .anyRequest().authenticated());
 
-        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

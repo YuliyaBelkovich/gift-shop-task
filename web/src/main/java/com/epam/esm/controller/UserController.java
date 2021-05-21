@@ -89,12 +89,12 @@ public class UserController {
      * @return the collection of orders
      */
     @GetMapping("/{id}/orders")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') and #id == authentication.principal.id")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_USER') and #id == authentication.principal.id)")
     public CollectionModel<OrderResponse> getAllOrders
     (@PathVariable("id") int id,
      @RequestParam(name = "page", defaultValue = "1")
      @Min(value = 1, message = "Page number can't be less than 1")
-     @Max(value = 10000, message = "Page number can't be greater than 100000") int page,
+     @Max(value = 10000, message = "Page number can't be greater than 10000") int page,
      @RequestParam(name = "pageSize", defaultValue = "20")
      @Min(value = 1, message = "Page size can't be less than 1")
      @Max(value = 100, message = "Page size can't be greater than 100") int pageSize) {
@@ -116,7 +116,7 @@ public class UserController {
      * @return order
      */
     @GetMapping("/{userId}/orders/{orderId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') and #userId == authentication.principal.id")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN') or(hasRole('ROLE_USER') and #userId == authentication.principal.id)")
     public ResponseEntity<OrderResponse> getOneOrder(@PathVariable("userId") int userId,
                                                      @PathVariable("orderId") int orderId) {
         return ResponseEntity.status(HttpStatus.OK).body(addOrderLinks(service.findOrderById(userId, orderId)));

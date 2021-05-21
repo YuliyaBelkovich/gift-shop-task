@@ -9,16 +9,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
-    UserDao userDao;
+    private UserDao userDao;
 
-    @Override
-    @Transactional
+    @Autowired
+    public UserDetailsServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDao.findByName(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));

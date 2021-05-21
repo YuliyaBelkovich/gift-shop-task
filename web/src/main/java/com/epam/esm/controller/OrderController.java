@@ -101,8 +101,7 @@ public class OrderController {
      * @return newly created order with the generated id and createDate
      */
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN') " +
-            "or hasRole('ROLE_USER') and #orderRequest.userId == authentication.principal.id")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_USER') and #orderRequest.userId == authentication.principal.id)")
     public ResponseEntity<OrderResponse> createOrder(@RequestBody @Valid OrderRequest orderRequest) {
         OrderResponse response = service.save(orderRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(addLinks(response));

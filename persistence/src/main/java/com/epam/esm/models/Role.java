@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "roles")
 @Audited
-public class Role implements Identifiable{
+public class Role implements Identifiable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -18,7 +18,6 @@ public class Role implements Identifiable{
     private ERole name;
 
     public Role() {
-
     }
 
     public Role(ERole name) {
@@ -31,7 +30,7 @@ public class Role implements Identifiable{
 
     @Override
     public void setId(int id) {
-
+        this.id = id;
     }
 
     public ERole getName() {

@@ -43,12 +43,4 @@ public class JwtUtils {
         return true;
     }
 
-    public boolean validateOAuth2Token(String authToken){
-        try {
-            Jwts.parser().parseClaimsJws(authToken).getBody();
-        } catch (Exception e){
-            return false;
-        }
-        return true;
-    }
 }

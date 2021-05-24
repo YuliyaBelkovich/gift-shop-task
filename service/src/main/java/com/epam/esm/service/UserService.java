@@ -8,10 +8,11 @@ import com.epam.esm.dto.response.UserResponse;
 import com.epam.esm.models.ERole;
 import com.epam.esm.models.PageableResponse;
 import com.epam.esm.models.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Optional;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     UserResponse findById(int id);
 
@@ -26,9 +27,5 @@ public interface UserService {
     boolean existsByEmail(String email);
 
     User findByName(ERole name);
-
-    JwtResponse logIn(LoginRequest loginRequest);
-
-    void register(SignupRequest signupRequest);
 
 }

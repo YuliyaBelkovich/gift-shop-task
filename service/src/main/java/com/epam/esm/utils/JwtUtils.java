@@ -1,6 +1,6 @@
 package com.epam.esm.utils;
 
-import com.epam.esm.dto.request.UserDetailsImpl;
+import com.epam.esm.service.auth.UserDetailsImpl;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;

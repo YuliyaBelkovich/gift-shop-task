@@ -30,25 +30,23 @@ import java.util.Locale;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
         prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserDetailsService userDetailsService;
     private AuthEntryPointJwt unauthorizedHandler;
     private AccessDeniedHandler accessDeniedHandler;
     private AuthTokenFilter authTokenFilter;
-    private MessageSource messageSource;
+
 
     @Autowired
     public WebSecurityConfig(UserDetailsService userDetailsService,
                              AuthEntryPointJwt unauthorizedHandler,
                              AccessDeniedHandler accessDeniedHandler,
-                             AuthTokenFilter authTokenFilter,
-                             MessageSource messageSource) {
+                             AuthTokenFilter authTokenFilter) {
         this.userDetailsService = userDetailsService;
         this.unauthorizedHandler = unauthorizedHandler;
         this.accessDeniedHandler = accessDeniedHandler;
         this.authTokenFilter = authTokenFilter;
-        this.messageSource = messageSource;
     }
 
     @Override
@@ -63,20 +61,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    public LocaleResolver localeResolver() {
-        AcceptHeaderLocaleResolver slr = new CustomLocaleResolver();
-        slr.setDefaultLocale(Locale.UK);
-        return slr;
-    }
-
-    @Bean
-    @Override
-    public LocalValidatorFactoryBean getValidator() {
-        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-        bean.setValidationMessageSource(messageSource);
-        return bean;
-    }
 
     @Override
     public void setAuthenticationConfiguration(AuthenticationConfiguration authenticationConfiguration) {

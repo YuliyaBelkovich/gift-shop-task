@@ -6,6 +6,7 @@ import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -42,7 +43,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex,
                                                         HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return createErrorResponse(ExceptionDefinition.MISSING_PATH_VARIABLE);
+        return createErrorResponse(ExceptionDefinition.BAD_REQUEST);
     }
 
     @Override
@@ -72,6 +73,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ServiceException.class)
     public final ResponseEntity<Object> handleServiceException(ServiceException e) {
         return createErrorResponse(e.getExceptionDefinition());
+    }
+
+    @ExceptionHandler(BadSqlGrammarException.class)
+    protected ResponseEntity<Object> handleSqlException(BadSqlGrammarException e){
+        return createErrorResponse(ExceptionDefinition.BAD_REQUEST);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return createErrorResponse(ExceptionDefinition.INVALID_MEDIA_TYPE);
     }
 
     @Override

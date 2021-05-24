@@ -16,7 +16,11 @@ public class GiftCertificateRequest {
     @Size(min = 2, max = 30, message = "Name length should be between 2 and 30 symbols")
     private String name;
     @NotNull(message = "Please, provide a name")
+<<<<<<< HEAD:service/src/main/java/com/epam/esm/dto/request/GiftCertificateRequest.java
     @Size(min = 2, max = 1000, message = "Description length should be between 2 and 30 symbols")
+=======
+    @Size(min = 2, max = 1000, message = "Description length should be between 2 and 1000 symbols")
+>>>>>>> d13e528d4807b5c583220ca0664d61d8c6667de5:service/src/main/java/com/epam/esm/dto/GiftCertificateRequest.java
     private String description;
     @DecimalMin(value = "0.01", message = "Price can't be less than 0.01$")
     private double price;

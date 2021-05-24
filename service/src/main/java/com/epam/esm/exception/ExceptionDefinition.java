@@ -11,9 +11,11 @@ public enum ExceptionDefinition {
     FILTER_TAG_FORMAT(4004, HttpStatus.BAD_REQUEST,"Tag filtering format should match the pattern [tag1;tag2;tag3;...]"),
     SORTING_FORMAT(4005, HttpStatus.BAD_REQUEST,"Sorting format should match the pattern [asc:field] or [desc:field]. Supported fields are name, createDate and lastUpdateDate."),
     INTERNAL_SERVER_ERROR(50001, HttpStatus.INTERNAL_SERVER_ERROR, "Exception on the server side occurred. Please try later"),
+<<<<<<< HEAD
     MISSING_PATH_VARIABLE(40002, HttpStatus.BAD_REQUEST, "Unable to read request"),
     METHOD_NOT_SUPPORTED(40501, HttpStatus.METHOD_NOT_ALLOWED, "API doesn't provide such method"),
     UNABLE_TO_FIND_MOST_POPULAR_TAG(40402, HttpStatus.NOT_FOUND, "Unable to find most recently used tag");
+>>>>>>> d13e528d4807b5c583220ca0664d61d8c6667de5
 
     private final int errorCode;
     private final HttpStatus status;

@@ -4,10 +4,10 @@ import javax.validation.constraints.NotNull;
 
 public class LoginRequest {
 
-    @NotNull(message = "Please, provide a name")
+    @NotNull(message = "{login.name}")
     private String username;
 
-    @NotNull(message = "Please, provide password")
+    @NotNull(message = "{login.password}")
     private String password;
 
     public String getUsername() {

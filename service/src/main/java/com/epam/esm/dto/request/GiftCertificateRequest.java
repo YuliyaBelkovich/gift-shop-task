@@ -12,15 +12,15 @@ import java.util.stream.Collectors;
 
 public class GiftCertificateRequest {
 
-    @NotNull(message = "Please, provide a name")
-    @Size(min = 2, max = 30, message = "Name length should be between 2 and 30 symbols")
+    @NotNull(message = "{login.name}")
+    @Size(min = 2, max = 30, message = "{login.name.message}")
     private String name;
-    @NotNull(message = "Please, provide a description")
-    @Size(min = 2, max = 1000, message = "Description length should be between 2 and 30 symbols")
+    @NotNull(message = "{description}")
+    @Size(min = 2, max = 1000, message = "{description.message}")
     private String description;
-    @DecimalMin(value = "0.01", message = "Price can't be less than 0.01$")
+    @DecimalMin(value = "0.01", message = "{price}")
     private double price;
-    @Min(value = 1, message = "Duration can't be less than 1 day")
+    @Min(value = 1, message = "{duration}")
     private int duration;
     private Set<String> tags;
 

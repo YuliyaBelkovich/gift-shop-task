@@ -9,7 +9,7 @@ import java.util.Objects;
 public class TagRequest {
 
     @NotNull
-    @Size(min = 2, max = 30, message = "Name length should be between 2 and 30 symbols")
+    @Size(min = 2, max = 30, message = "{name.message}")
     private String name;
 
     public TagRequest() {

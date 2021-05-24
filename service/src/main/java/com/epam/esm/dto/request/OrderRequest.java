@@ -11,10 +11,10 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class OrderRequest {
-    @NotNull(message = "Please, provide user id")
-    @Min(value = 1, message = "User id can't be less than 1")
+    @NotNull(message = "{userId}")
+    @Min(value = 1, message = "{userId.message}")
     private int userId;
-    @NotNull(message = "Please, indicate the certificates to purchase")
+    @NotNull(message = "{certificate}")
     private List<Integer> giftCertificates;
 
     public OrderRequest() {

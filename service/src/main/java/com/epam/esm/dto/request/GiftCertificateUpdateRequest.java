@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 
 public class GiftCertificateUpdateRequest {
 
-    @Size(min = 2, max = 30, message = "Name length should be between 2 and 30 symbols")
+    @Size(min = 2, max = 30, message = "{login.name.message}")
     private String name;
-    @Size(min = 2, max = 1000, message = "Description length should be between 2 and 30 symbols")
+    @Size(min = 2, max = 1000, message = "{description}")
     private String description;
-    @DecimalMin(value = "0", message = "Price can't be less than 0.01$")
+    @DecimalMin(value = "0", message = "{price}")
     private double price;
-    @Min(value = 0, message = "Duration can't be less than 1 day")
+    @Min(value = 0, message = "{duration}")
     private int duration;
     private List<CertificateTagUpdateRequest> tags;
 

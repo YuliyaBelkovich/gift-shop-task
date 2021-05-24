@@ -5,17 +5,17 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class SignupRequest {
-    @NotNull(message = "Please, provide a name")
-    @Size(min = 2, max = 30, message = "Name length should be between 2 and 30 symbols")
+    @NotNull(message = "{login.name}")
+    @Size(min = 2, max = 30, message = "{login.name.message}")
     private String username;
 
-    @NotNull(message = "Please, provide an email")
-    @Size(min = 5, max = 35, message = "Email length should be between 5 and 35 symbols")
+    @NotNull(message = "{login.email}")
+    @Size(min = 5, max = 35, message = "{login.email.message}")
     @Email
     private String email;
 
-    @NotNull(message = "Please, provide a password")
-    @Size(min = 6, max = 40, message = "Password length should be between 6 and 40 symbols")
+    @NotNull(message = "{login.password}")
+    @Size(min = 6, max = 40, message = "{login.password.message}")
     private String password;
 
     public String getUsername() {

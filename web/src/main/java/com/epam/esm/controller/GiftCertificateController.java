@@ -58,11 +58,11 @@ public class GiftCertificateController {
     public CollectionModel<GiftCertificateResponse> getAll
     (@RequestParam(required = false) Map<String, String> allParams,
      @RequestParam(name = "page", defaultValue = "1")
-     @Min(value = 1, message = "Page number can't be less than 1")
-     @Max(value = 10000, message = "Page number can't be greater than 100000") int page,
+     @Min(value = 1, message = "{page.number.less}")
+     @Max(value = 10000, message = "{page.number.greater}") int page,
      @RequestParam(name = "pageSize", defaultValue = "20")
-     @Min(value = 1, message = "Page size can't be less than 1")
-     @Max(value = 100, message = "Page size can't be greater than 100") int pageSize) {
+     @Min(value = 1, message = "{page.size.less}")
+     @Max(value = 100, message = "{page.size.greater}") int pageSize) {
         PageableResponse<GiftCertificateResponse> response = service.findAll(allParams, page, pageSize);
         return PagedModel.of(response.getResponses().stream()
                         .map(this::addLinks)

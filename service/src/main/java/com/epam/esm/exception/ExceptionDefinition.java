@@ -9,7 +9,7 @@ public enum ExceptionDefinition {
     UNSUPPORTED_MEDIA_TYPE(41501, HttpStatus.UNSUPPORTED_MEDIA_TYPE, "wrong.media.type"),
     TAG_UPDATE_OPERATION_NOT_SPECIFIED(40003, HttpStatus.BAD_REQUEST, "tag.operation"),
     FILTER_TAG_FORMAT(4004, HttpStatus.BAD_REQUEST, "tag.filter"),
-    SORTING_FORMAT(4005, HttpStatus.BAD_REQUEST, "sorting.format"),
+    SORTING_FORMAT(4005, HttpStatus.BAD_REQUEST, "sort.format"),
     REGISTER_EMAIL(4006, HttpStatus.BAD_REQUEST, "email.taken"),
     REGISTER_NAME(4007, HttpStatus.BAD_REQUEST, "username.taken"),
     INTERNAL_SERVER_ERROR(50001, HttpStatus.INTERNAL_SERVER_ERROR, "internal.error"),

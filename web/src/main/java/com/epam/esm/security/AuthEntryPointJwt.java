@@ -31,7 +31,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
         ArrayList<String> errors = new ArrayList<>();
         response.setHeader("Content-Type", "application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        errors.add("This action requires authorization");
+        errors.add(messageSource.getMessage("authorization",null,"This action requires authorization", LocaleContextHolder.getLocale()));
         GiftShopErrorResponse errorResponse = new GiftShopErrorResponse(40101, errors);
         OutputStream out = response.getOutputStream();
         ObjectMapper mapper = new ObjectMapper();

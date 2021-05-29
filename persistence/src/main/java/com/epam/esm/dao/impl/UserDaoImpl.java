@@ -1,7 +1,6 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.UserDao;
-import com.epam.esm.models.GiftCertificate;
 import com.epam.esm.models.Order;
 import com.epam.esm.models.PageableResponse;
 import com.epam.esm.models.User;
@@ -36,7 +35,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         Root<User> userCountRoot = countQuery.from(User.class);
-        countQuery.select(userCountRoot.get("orders")).where(cb.equal(userCountRoot.get("id"), id));
+        countQuery.select(userCountRoot.join("orders")).where(cb.equal(userCountRoot.get("id"), id));
         countQuery.select(cb.count(userCountRoot));
         Long count = em.createQuery(countQuery).getSingleResult();
 

@@ -9,7 +9,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -32,7 +31,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
         ArrayList<String> errors = new ArrayList<>();
         response.setHeader("Content-Type", "application/json");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        errors.add("Access denied");
+        errors.add(messageSource.getMessage("access.denied",null,"Access denied", LocaleContextHolder.getLocale()));
         GiftShopErrorResponse errorResponse = new GiftShopErrorResponse(40301, errors);
         OutputStream out = response.getOutputStream();
         ObjectMapper mapper = new ObjectMapper();
